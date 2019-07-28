@@ -7,7 +7,7 @@
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Rich Text Display Manager</masterLabel>
+    <masterLabel>Manage Entries</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>
