@@ -1,26 +1,30 @@
 public without sharing class WidgetAPI {
     @AuraEnabled(Cacheable=true)
-    public static String renderText(String title, String content) {
-        System.debug('[WidgetAPI.renderText] title: ' + title);
-        System.debug('[WidgetAPI.renderText] content: ' + content);
+    public static String renderText(String title, String content, Boolean isDebugging) {
+        Debug.enabled = (isDebugging != null) ? isDebugging : false;
+
+        Debug.log('[WidgetAPI.renderText] title: ' + title);
+        Debug.log('[WidgetAPI.renderText] content: ' + content);
         String safeTitle = EncodingUtil.urlEncode(title, 'UTF-8');
         String safeContent = EncodingUtil.urlEncode(content, 'UTF-8');
         PageReference render = Page.Render;
         String url = render.getUrl() + '?title=' + safeTitle + '&content=' + safeContent;
 
         String result = JSON.serialize(parseRenderedText(url));
-        System.debug('[WidgetAPI.renderText] result: ' + result);
+        Debug.log('[WidgetAPI.renderText] result: ' + result);
         return result;
     }
 
     @AuraEnabled(Cacheable=true)
-    public static String renderDeveloperName(String developerName) {
-        System.debug('[WidgetAPI.renderDeveloperName] developerName: ' + developerName);
+    public static String renderDeveloperName(String developerName, Boolean isDebugging) {
+        Debug.enabled = (isDebugging != null) ? isDebugging : false;
+
+        Debug.log('[WidgetAPI.renderDeveloperName] developerName: ' + developerName);
         PageReference render = Page.Render;
         String url = render.getUrl() + '?developerName=' + developerName;
 
         String result = JSON.serialize(parseRenderedText(url));
-        System.debug('[WidgetAPI.renderDeveloperName] result: ' + result);
+        Debug.log('[WidgetAPI.renderDeveloperName] result: ' + result);
         return result;
     }
 
@@ -40,7 +44,7 @@ public without sharing class WidgetAPI {
             content = new PageReference(path).getContent().toString();
         }
 
-        System.debug('[WidgetAPI.parseRenderedText] response: ' + content);
+        Debug.log('[WidgetAPI.parseRenderedText] response: ' + content);
 
         String commentRegex = '\\<\\!--\\*+--\\>';
         String matchRegex = commentRegex + '(.*)' + commentRegex + commentRegex + '(.*)' + commentRegex;
@@ -58,6 +62,7 @@ public without sharing class WidgetAPI {
     public class RenderData {
         public String title;
         public String content;
+        public Boolean isDebugging = Debug.enabled;
 
         public RenderData(List<String> text) {
             if (text.isEmpty()) {

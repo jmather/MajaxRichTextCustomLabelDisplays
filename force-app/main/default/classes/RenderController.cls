@@ -7,9 +7,9 @@ public without sharing class RenderController {
         String title = ApexPages.currentPage().getParameters().get('title');
         String developerName = ApexPages.currentPage().getParameters().get('developerName');
         
-        System.debug('[RenderController] passed content: ' + content);
-        System.debug('[RenderController] passed title: ' + title);
-        System.debug('[RenderController] passed developerName: ' + developerName);
+        Debug.log('[RenderController] passed content: ' + content);
+        Debug.log('[RenderController] passed title: ' + title);
+        Debug.log('[RenderController] passed developerName: ' + developerName);
 
         if (developerName != null && String.isBlank(developerName) == false) {
             setFromEntry(developerName);
@@ -21,8 +21,8 @@ public without sharing class RenderController {
             this.content = 'Example Content';
         }
 
-        System.debug('[RenderController] content: ' + this.content);
-        System.debug('[RenderController] title: ' + this.title);
+        Debug.log('[RenderController] content: ' + this.content);
+        Debug.log('[RenderController] title: ' + this.title);
     }
     
     public String getRenderedContent() {
@@ -56,11 +56,11 @@ public without sharing class RenderController {
     }
 
     private void setFromEntry(String developerName) {
-        MAJAX__Display_Text_Entry__mdt entry = DAO.getEntry(developerName);
+        MAJAX__Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
         
         if (entry == null) {
             title = 'Error';
-            content = 'A MAJAX__Display_Text_Entry__mdt record with the DeveloperName "' + developerName + '" was not found.';
+            content = 'A MAJAX__Display_Entry__mdt record with the DeveloperName "' + developerName + '" was not found.';
         }
         
         title = entry.MAJAX__Title__c;

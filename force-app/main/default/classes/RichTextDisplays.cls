@@ -1,19 +1,19 @@
 public without sharing class RichTextDisplays {
     @AuraEnabled(Cacheable=true)
-    public static List<MAJAX__Display_Text_Entry__mdt> getEntries() {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [
+    public static List<MAJAX__Display_Entry__mdt> getEntries() {
+        List<MAJAX__Display_Entry__mdt> entries = [
             SELECT
                 Id,
                 MasterLabel,
                 DeveloperName,
                 MAJAX__Content__c
-            FROM MAJAX__Display_Text_Entry__mdt
+            FROM MAJAX__Display_Entry__mdt
             WHERE MAJAX__IsDeleted__c = FALSE
             ORDER BY MasterLabel
         ];
 
-        for (MAJAX__Display_Text_Entry__mdt entry : entries) {
-            System.debug('[RichTextDisplays.getEntries] entry: ' + entry);
+        for (MAJAX__Display_Entry__mdt entry : entries) {
+            Debug.log('[RichTextDisplays.getEntries] entry: ' + entry);
         }
 
         return entries;
@@ -21,7 +21,7 @@ public without sharing class RichTextDisplays {
 
     @AuraEnabled(Cacheable=true)
     public static String renderContent(String value) {
-        System.debug('[RichTextDisplays.render] value: ' + value);
+        Debug.log('[RichTextDisplays.render] value: ' + value);
         String safeValue = EncodingUtil.urlEncode(value, 'UTF-8');
         String url = '/apex/RenderRichTextDisplay?content=' + safeValue;
 
@@ -30,7 +30,7 @@ public without sharing class RichTextDisplays {
 
     @AuraEnabled(Cacheable=true)
     public static String renderDeveloperName(String developerName) {
-        System.debug('[RichTextDisplays.render] developerName: ' + developerName);
+        Debug.log('[RichTextDisplays.render] developerName: ' + developerName);
         String url = '/apex/RenderRichTextDisplay?developerName=' + developerName;
 
         return getRenderedContent(url);
@@ -38,7 +38,7 @@ public without sharing class RichTextDisplays {
 
     @AuraEnabled
     public static String createEntry(String developerName, String label, String content) {
-        MAJAX__Display_Text_Entry__mdt entry = new MAJAX__Display_Text_Entry__mdt(
+        MAJAX__Display_Entry__mdt entry = new MAJAX__Display_Entry__mdt(
             MasterLabel = label,
             DeveloperName = developerName,
             MAJAX__Content__c = content
@@ -46,24 +46,24 @@ public without sharing class RichTextDisplays {
 
         String guid = updateEntryMetaData(entry);
 
-        System.debug('[RichTextDisplays.createEntry] guid: ' + guid);
+        Debug.log('[RichTextDisplays.createEntry] guid: ' + guid);
 
         String response = JSON.serialize(new JobStatus(guid));
 
-        System.debug('[RichTextDisplays.createEntry] response: ' + response);
+        Debug.log('[RichTextDisplays.createEntry] response: ' + response);
 
         return response;
     }
 
     @AuraEnabled
     public static String updateEntry(String developerName, String label, String content) {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Content__c FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsDeleted__c = FALSE];
+        List<MAJAX__Display_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Content__c FROM MAJAX__Display_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsDeleted__c = FALSE];
 
         if (entries.isEmpty()) {
             return null;
         }
 
-        MAJAX__Display_Text_Entry__mdt entry = entries[0];
+        MAJAX__Display_Entry__mdt entry = entries[0];
 
         if (label != null) {
             entry.MasterLabel = label;
@@ -75,47 +75,47 @@ public without sharing class RichTextDisplays {
 
         String guid = updateEntryMetaData(entry);
 
-        System.debug('[RichTextDisplays.createEntry] guid: ' + guid);
+        Debug.log('[RichTextDisplays.createEntry] guid: ' + guid);
 
         String response = JSON.serialize(new JobStatus(guid));
 
-        System.debug('[RichTextDisplays.createEntry] response: ' + response);
+        Debug.log('[RichTextDisplays.createEntry] response: ' + response);
 
         return response;
     }
 
     @AuraEnabled
     public static String deleteEntry(String developerName) {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName];
+        List<MAJAX__Display_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName FROM MAJAX__Display_Entry__mdt WHERE DeveloperName = :developerName];
 
         if (entries.isEmpty()) {
             return null;
         }
 
-        MAJAX__Display_Text_Entry__mdt entry = entries[0];
+        MAJAX__Display_Entry__mdt entry = entries[0];
 
         String guid = deleteEntryMetaData(entry);
 
-        System.debug('[RichTextDisplays.createEntry] guid: ' + guid);
+        Debug.log('[RichTextDisplays.createEntry] guid: ' + guid);
 
         String response = JSON.serialize(new JobStatus(guid));
 
-        System.debug('[RichTextDisplays.createEntry] response: ' + response);
+        Debug.log('[RichTextDisplays.createEntry] response: ' + response);
 
         return response;
     }
 
     @AuraEnabled
     public static String isJobComplete(String guid, Integer count) {
-        MAJAX__MetadataRequestCache__c cacheEntry = MAJAX__MetadataRequestCache__c.getInstance(guid);
+        MAJAX__AsyncRequest__c cacheEntry = MAJAX__AsyncRequest__c.getInstance(guid);
         
-        System.debug('[RichTextDisplays.isJobComplete] cacheEntry: ' + cacheEntry);
+        Debug.log('[RichTextDisplays.isJobComplete] cacheEntry: ' + cacheEntry);
 
         String response;
 
         if (cacheEntry != null) {
             response = JSON.serialize(new JobStatus(guid, count, cacheEntry.MAJAX__IsComplete__c, cacheEntry.MAJAX__IsSuccessful__c));
-            System.debug('[RichTextDisplays.isJobComplete] response: ' + response);
+            Debug.log('[RichTextDisplays.isJobComplete] response: ' + response);
 
             if (cacheEntry.MAJAX__IsComplete__c) {
                 delete cacheEntry;
@@ -125,7 +125,7 @@ public without sharing class RichTextDisplays {
         }
 
         response = JSON.serialize(new JobStatus(guid, count));
-        System.debug('[RichTextDisplays.isJobComplete] response: ' + response);
+        Debug.log('[RichTextDisplays.isJobComplete] response: ' + response);
         return response;
     }
 
@@ -133,23 +133,23 @@ public without sharing class RichTextDisplays {
         PageReference ref = new PageReference(url);
         String content = ref.getContent().toString();
 
-        System.debug('[RichTextDisplays.getRenderedContent] response: ' + content);
+        Debug.log('[RichTextDisplays.getRenderedContent] response: ' + content);
 
         Pattern p = Pattern.compile('\\<\\!--\\*+--\\>(.*)\\<\\!--\\*+--\\>');
         Matcher m = p.matcher(content);
 
         if (m.find()) {
             String rendered = m.group(1);
-            System.debug('[RichTextDisplays.getRenderedContent] rendered: ' + rendered);
+            Debug.log('[RichTextDisplays.getRenderedContent] rendered: ' + rendered);
             return rendered;
         }
         
         return 'We encountered an error processing the output.';
     }
 
-    private static String updateEntryMetaData(MAJAX__Display_Text_Entry__mdt entry) {
+    private static String updateEntryMetaData(MAJAX__Display_Entry__mdt entry) {
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
         Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
         customField.field = 'MAJAX__Content__c';
@@ -163,9 +163,9 @@ public without sharing class RichTextDisplays {
         return deployMetadata(mdContainer);
     }
 
-    private static String deleteEntryMetaData(MAJAX__Display_Text_Entry__mdt entry) {
+    private static String deleteEntryMetaData(MAJAX__Display_Entry__mdt entry) {
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
 
         Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
@@ -204,20 +204,20 @@ public without sharing class RichTextDisplays {
         }
 
         public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
-            System.debug('[RichTextDiplays.CustomMetadataCallback.handleResult] result: ' + JSON.serializePretty(result));
+            Debug.log('[RichTextDiplays.CustomMetadataCallback.handleResult] result: ' + JSON.serializePretty(result));
             
             if (result.done) {
-                MAJAX__MetadataRequestCache__c cacheEntry = new MAJAX__MetadataRequestCache__c(Name = guid);
+                MAJAX__AsyncRequest__c cacheEntry = new MAJAX__AsyncRequest__c(Name = guid);
                 cacheEntry.MAJAX__IsComplete__c = true;
                 cacheEntry.MAJAX__IsSuccessful__c = result.status == Metadata.DeployStatus.Succeeded;
                 insert cacheEntry;
-                System.debug('[RichTextDiplays.CustomMetadataCallback.handleResult] cacheEntry: ' + cacheEntry);                
+                Debug.log('[RichTextDiplays.CustomMetadataCallback.handleResult] cacheEntry: ' + cacheEntry);
             }
 
             if (result.status == Metadata.DeployStatus.Succeeded) {
-                System.debug('[RichTextDiplays.CustomMetadataCallback.handleResult] success');
+                Debug.log('[RichTextDiplays.CustomMetadataCallback.handleResult] success');
             } else {
-                System.debug('[RichTextDiplays.CustomMetadataCallback.handleResult] failure');
+                Debug.log('[RichTextDiplays.CustomMetadataCallback.handleResult] failure');
             }
         }
     }

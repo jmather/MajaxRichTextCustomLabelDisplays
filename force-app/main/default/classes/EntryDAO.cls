@@ -1,6 +1,6 @@
-public without sharing class DAO {
-    public static List<MAJAX__Display_Text_Entry__mdt> getEntries() {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [
+public without sharing class EntryDAO {
+    public static List<MAJAX__Display_Entry__mdt> getEntries() {
+        List<MAJAX__Display_Entry__mdt> entries = [
             SELECT
                 Id,
                 MasterLabel,
@@ -8,20 +8,20 @@ public without sharing class DAO {
                 MAJAX__Title__c,
                 MAJAX__Content__c,
                 MAJAX__IsHidden__c
-            FROM MAJAX__Display_Text_Entry__mdt
+            FROM MAJAX__Display_Entry__mdt
             WHERE MAJAX__IsHidden__c = FALSE
             ORDER BY MasterLabel
         ];
 
-        for (MAJAX__Display_Text_Entry__mdt entry : entries) {
-            System.debug('[DAO.getEntries] entry: ' + entry);
+        for (MAJAX__Display_Entry__mdt entry : entries) {
+            Debug.log('[DAO.getEntries] entry: ' + entry);
         }
 
         return entries;
     }
 
-    public static MAJAX__Display_Text_Entry__mdt getEntry(String developerName) {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Title__c, MAJAX__Content__c, MAJAX__IsHidden__c FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
+    public static MAJAX__Display_Entry__mdt getEntry(String developerName) {
+        List<MAJAX__Display_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Title__c, MAJAX__Content__c, MAJAX__IsHidden__c FROM MAJAX__Display_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
         
         if (entries.isEmpty()) {
             return null;
@@ -30,11 +30,11 @@ public without sharing class DAO {
         return entries[0];
     }
 
-    public static AsyncTransactionStatus upsertEntry(MAJAX__Display_Text_Entry__mdt entry) {
+    public static AsyncTransactionStatus upsertEntry(MAJAX__Display_Entry__mdt entry) {
         Callback cb = new Callback(entry.DeveloperName);
 
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
 
         Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
@@ -54,12 +54,12 @@ public without sharing class DAO {
 
         Metadata.Operations.enqueueDeployment(mdContainer, cb);
 
-        return AsyncTransactionAPI.getStatus(cb.txnId);
+        return TransactionDAO.getStatus(cb.txnId);
     }
 
-    public static AsyncTransactionStatus hideEntry(MAJAX__Display_Text_Entry__mdt entry) {
+    public static AsyncTransactionStatus hideEntry(MAJAX__Display_Entry__mdt entry) {
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
 
         Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
@@ -75,7 +75,7 @@ public without sharing class DAO {
 
         Metadata.Operations.enqueueDeployment(mdContainer, cb);
 
-        return AsyncTransactionAPI.getStatus(cb.txnId);
+        return TransactionDAO.getStatus(cb.txnId);
     }
 
     class Callback implements Metadata.DeployCallback {
@@ -86,12 +86,12 @@ public without sharing class DAO {
         }
 
         public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
-            System.debug('[DAO.Callback.handleResult] done: ' + result.done);
-            System.debug('[DAO.Callback.handleResult] status: ' + result.status);
-            System.debug('[DAO.Callback.handleResult] result: ' + JSON.serializePretty(result));
+            Debug.log('[DAO.Callback.handleResult] done: ' + result.done);
+            Debug.log('[DAO.Callback.handleResult] status: ' + result.status);
+            Debug.log('[DAO.Callback.handleResult] result: ' + JSON.serializePretty(result));
 
             if (result.done) {
-                AsyncTransactionAPI.recordResult(txnId, result.status == Metadata.DeployStatus.Succeeded);
+                TransactionDAO.recordResult(txnId, result.status == Metadata.DeployStatus.Succeeded);
             }
         }
     }

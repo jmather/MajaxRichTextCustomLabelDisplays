@@ -13,6 +13,7 @@
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__HomePage,lightning__RecordPage,lightning__Inbox,lightningCommunity__Default">
             <property name="developerName" label="Rich Text Entry to Display" required="true" type="String" datasource="apex://ConfigOptions"/>
+            <property name="isDebugging" label="Enable Debugging" required="true" default="false" type="Boolean" />
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

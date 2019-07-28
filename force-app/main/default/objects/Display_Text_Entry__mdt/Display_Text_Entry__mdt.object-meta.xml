@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Content available to the Rich Text Display Lightning Web Component</description>
-    <label>Display Text Entry</label>
-    <pluralLabel>Display Text Entries</pluralLabel>
-    <visibility>Public</visibility>
-</CustomObject>

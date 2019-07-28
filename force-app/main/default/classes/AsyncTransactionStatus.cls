@@ -3,6 +3,7 @@ public without sharing class AsyncTransactionStatus {
     public Integer count;
     public Boolean isComplete;
     public Boolean isSuccessful;
+    public Boolean isDebugging = Debug.enabled;
 
     public AsyncTransactionStatus() {
         this(Guid.generate(), 0);

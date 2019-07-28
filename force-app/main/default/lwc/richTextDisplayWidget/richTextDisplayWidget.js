@@ -7,15 +7,22 @@ export default class RichTextDisplayWidget extends LightningElement {
     @api developerName;
     @api title;
     @api content;
+    @api isDebugging = false;
     @track loading = true;
     @track renderedTitle = '';
     @track renderedContent = '';
 
-    @wire(callRenderText, { title: '$title', content: '$content' })
+    static debug() {
+        if (this.isDebugging) {
+            console.log.apply(console, arguments);
+        }
+    }
+
+    @wire(callRenderText, { title: '$title', content: '$content', isDebugging: '$isDebugging' })
     handleRenderingText({ error, data }) {
-        console.log('RichTextDisplayWidget.handleRenderingText title', this.title);
-        console.log('RichTextDisplayWidget.handleRenderingText content', this.content);
-        console.log('RichTextDisplayWidget.handleRenderingText data', JSON.stringify(data));
+        RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingText title', this.title);
+        RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingText content', this.content);
+        RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingText data', JSON.stringify(data));
 
         this.loading = false;
 
@@ -26,10 +33,10 @@ export default class RichTextDisplayWidget extends LightningElement {
         this.handleResponseData(data, error);
     }
 
-    @wire(callRenderDeveloperName, { developerName: '$developerName' })
+    @wire(callRenderDeveloperName, { developerName: '$developerName', isDebugging: '$isDebugging' })
     handleRenderingDeveloperName({ error, data }) {
-        console.log('RichTextDisplayWidget.handleRenderingDeveloperName developerName', this.developerName);
-        console.log('RichTextDisplayWidget.handleRenderingDeveloperName data', JSON.stringify(data));
+        RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingDeveloperName developerName', this.developerName);
+        RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingDeveloperName data', JSON.stringify(data));
 
         this.loading = false;
 

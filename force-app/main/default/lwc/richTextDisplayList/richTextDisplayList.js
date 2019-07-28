@@ -2,6 +2,7 @@ import { LightningElement, wire, track } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import getEntries from '@salesforce/apex/AdminAPI.getEntries'
+import isDebugging from '@salesforce/apex/AdminAPI.isDebugging'
 
 export default class RichTextDisplayList extends LightningElement {
     @track error;
@@ -11,9 +12,18 @@ export default class RichTextDisplayList extends LightningElement {
     @wire(getEntries)
     entries;
 
+    @wire(isDebugging)
+    isDebugging = false;
+
+    static debug() {
+        if (this.isDebugging) {
+            console.log.apply(console, arguments);
+        }
+    }
+
     handlePreAction(event) {
-        console.log('RichTextDisplayList.handlePreAction', event);
-        console.log('RichTextDisplayList.handlePreAction', JSON.stringify(event.detail));
+        RichTextDisplayList.debug('RichTextDisplayList.handlePreAction', event);
+        RichTextDisplayList.debug('RichTextDisplayList.handlePreAction', JSON.stringify(event.detail));
         this.disabled = true;
         this.disabledAction = event.detail.action;
     }
@@ -21,8 +31,8 @@ export default class RichTextDisplayList extends LightningElement {
     handlePostAction(event) {
         var controller = this;
 
-        console.log('RichTextDisplayList.handlePostAction', event);
-        console.log('RichTextDisplayList.handlePostAction', JSON.stringify(event.detail));
+        RichTextDisplayList.debug('RichTextDisplayList.handlePostAction', event);
+        RichTextDisplayList.debug('RichTextDisplayList.handlePostAction', JSON.stringify(event.detail));
 
         return refreshApex(this.entries).then(() => {
             var actionDescription = null;

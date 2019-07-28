@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <customSettingsType>List</customSettingsType>
-    <description>Stores the status of metadata requests</description>
+    <description>Stores the status and result of metadata change requests</description>
     <enableFeeds>false</enableFeeds>
-    <label>Metadata Request Cache</label>
+    <label>Async Request Results</label>
     <visibility>Protected</visibility>
 </CustomObject>

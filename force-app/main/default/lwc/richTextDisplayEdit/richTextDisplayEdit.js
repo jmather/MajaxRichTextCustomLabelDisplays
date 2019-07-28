@@ -33,12 +33,19 @@ class JobHelper {
 
 export default class RichTextDisplayEdit extends LightningElement {
     @api entry;
+    @api isDebugging = false;
     @track disabled = false;
     @track disabledAction = null;
 
     @track label;
     @track title;
     @track content;
+
+    static log() {
+        if (this.isDebugging) {
+            console.log.apply(console, arguments);
+        }
+    }
 
     connectedCallback() {
         this.label = this.entry.MasterLabel || '';
