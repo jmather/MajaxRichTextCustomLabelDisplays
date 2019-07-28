@@ -3,6 +3,10 @@
  */
 
 public with sharing class Guid {
+    public static String generateId() {
+        return generate().replace('-', '_');
+    }
+
     public static String generate() {
         Blob b = Crypto.generateAesKey(128);
         String h = EncodingUtil.convertToHex(b);

@@ -1,5 +1,5 @@
-global without sharing class DAO {
-    global static List<MAJAX__Display_Text_Entry__mdt> getEntries() {
+public without sharing class DAO {
+    public static List<MAJAX__Display_Text_Entry__mdt> getEntries() {
         List<MAJAX__Display_Text_Entry__mdt> entries = [
             SELECT
                 Id,
@@ -19,7 +19,7 @@ global without sharing class DAO {
         return entries;
     }
 
-    global static MAJAX__Display_Text_Entry__mdt getEntry(String developerName) {
+    public static MAJAX__Display_Text_Entry__mdt getEntry(String developerName) {
         List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MAJAX__Title__c, MAJAX__Content__c FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
         
         if (entries.isEmpty()) {
@@ -29,7 +29,9 @@ global without sharing class DAO {
         return entries[0];
     }
 
-    global static AsyncTransactionStatus upsertEntry(MAJAX__Display_Text_Entry__mdt entry) {
+    public static AsyncTransactionStatus upsertEntry(MAJAX__Display_Text_Entry__mdt entry) {
+        Callback cb = new Callback(entry.DeveloperName);
+
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
         customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
@@ -49,14 +51,12 @@ global without sharing class DAO {
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         mdContainer.addMetadata((Metadata.Metadata) customMetadata);
 
-        Callback cb = new Callback(entry.DeveloperName);
-
         Metadata.Operations.enqueueDeployment(mdContainer, cb);
 
         return AsyncTransactionAPI.getStatus(cb.txnId);
     }
 
-    global static AsyncTransactionStatus hideEntry(MAJAX__Display_Text_Entry__mdt entry) {
+    public static AsyncTransactionStatus hideEntry(MAJAX__Display_Text_Entry__mdt entry) {
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
         customMetadata.fullName = 'MAJAX__Display_Text_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;

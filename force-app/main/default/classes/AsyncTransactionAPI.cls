@@ -1,9 +1,9 @@
-global without sharing class AsyncTransactionAPI {
-    global static AsyncTransactionStatus getStatus(String txnId) {
+public without sharing class AsyncTransactionAPI {
+    public static AsyncTransactionStatus getStatus(String txnId) {
         return getStatus(txnId, 0);
     }
 
-    global static AsyncTransactionStatus getStatus(String txnId, Integer count) {
+    public static AsyncTransactionStatus getStatus(String txnId, Integer count) {
         MAJAX__MetadataRequestCache__c cacheEntry = MAJAX__MetadataRequestCache__c.getInstance(txnId);
         
         System.debug('[AsyncTransactionAPI.getStatus] cacheEntry: ' + cacheEntry);
@@ -24,7 +24,7 @@ global without sharing class AsyncTransactionAPI {
         return response;
     }
 
-    global static void recordResult(String txnId, Boolean wasSuccessful) {
+    public static void recordResult(String txnId, Boolean wasSuccessful) {
         MAJAX__MetadataRequestCache__c cacheEntry = new MAJAX__MetadataRequestCache__c(Name = txnId);
         cacheEntry.MAJAX__WasSuccessful__c = wasSuccessful;
         insert cacheEntry;

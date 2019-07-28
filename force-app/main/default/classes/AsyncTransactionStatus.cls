@@ -1,8 +1,8 @@
-global without sharing class AsyncTransactionStatus {
-    global String txnId;
-    global Integer count;
-    global Boolean isComplete;
-    global Boolean isSuccessful;
+public without sharing class AsyncTransactionStatus {
+    public String txnId;
+    public Integer count;
+    public Boolean isComplete;
+    public Boolean isSuccessful;
 
     public AsyncTransactionStatus() {
         this(Guid.generate(), 0);
@@ -17,5 +17,9 @@ global without sharing class AsyncTransactionStatus {
         this.count = count;
         this.isComplete = isComplete;
         this.isSuccessful = isSuccessful;
+    }
+
+    public override String toString() {
+        return JSON.serialize(this);
     }
 }

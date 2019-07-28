@@ -11,7 +11,7 @@ class JobHelper {
                 return JobHelper.whenComplete(check, callback, maxCheckCount);    
             };
 
-            console.log('[richTextDisplayCreate.whenComplete]', { status });
+            console.log('[richTextDisplayCreate.whenComplete]', { status: JSON.stringify(status) });
     
             if (status.isComplete === true) {
                 callback(status);

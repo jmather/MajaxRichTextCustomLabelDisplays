@@ -5,8 +5,8 @@ public without sharing class AdminAPI {
     }
 
     @AuraEnabled
-    public static AsyncTransactionStatus createEntry(String label, String title, String content) {
-        String developerName = Guid.generate();
+    public static String createEntry(String label, String title, String content) {
+        String developerName = Guid.generateId();
         MAJAX__Display_Text_Entry__mdt entry = new MAJAX__Display_Text_Entry__mdt(
             MasterLabel = label,
             DeveloperName = developerName,
@@ -18,11 +18,11 @@ public without sharing class AdminAPI {
 
         System.debug('[AdminAPI.createEntry] status: ' + status);
 
-        return status;
+        return status.toString();
     }
 
     @AuraEnabled
-    public static AsyncTransactionStatus updateEntry(String developerName, String label, String title, String content) {
+    public static String updateEntry(String developerName, String label, String title, String content) {
         MAJAX__Display_Text_Entry__mdt entry = DAO.getEntry(developerName);
 
         if (label != null) {
@@ -41,22 +41,25 @@ public without sharing class AdminAPI {
 
         System.debug('[AdminAPI.updateEntry] status: ' + status);
 
-        return status;
+        return status.toString();
     }
 
     @AuraEnabled
-    public static AsyncTransactionStatus hideEntry(String developerName) {
+    public static String hideEntry(String developerName) {
         MAJAX__Display_Text_Entry__mdt entry = DAO.getEntry(developerName);
 
         AsyncTransactionStatus status = DAO.hideEntry(entry);
 
         System.debug('[AdminAPI.hideEntry] status: ' + status);
 
-        return status;
+        return status.toString();
     }
 
     @AuraEnabled
-    public static AsyncTransactionStatus getTransactionStatus(String txnId, Integer count) {
-        return AsyncTransactionAPI.getStatus(txnId, count);
+    public static String getTransactionStatus(String txnId, Integer count) {
+        System.debug('[AdminAPI.getTransactionStatus] txnId: ' + txnId);
+        AsyncTransactionStatus status = AsyncTransactionAPI.getStatus(txnId, count);
+        System.debug('[AdminAPI.getTransactionStatus] status: ' + status);
+        return status.toString();
     }
 }
