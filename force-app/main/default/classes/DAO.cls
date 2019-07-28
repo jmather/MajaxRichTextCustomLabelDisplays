@@ -6,7 +6,8 @@ public without sharing class DAO {
                 MasterLabel,
                 DeveloperName,
                 MAJAX__Title__c,
-                MAJAX__Content__c
+                MAJAX__Content__c,
+                MAJAX__IsHidden__c
             FROM MAJAX__Display_Text_Entry__mdt
             WHERE MAJAX__IsHidden__c = FALSE
             ORDER BY MasterLabel
@@ -20,7 +21,7 @@ public without sharing class DAO {
     }
 
     public static MAJAX__Display_Text_Entry__mdt getEntry(String developerName) {
-        List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MAJAX__Title__c, MAJAX__Content__c FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
+        List<MAJAX__Display_Text_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Title__c, MAJAX__Content__c, MAJAX__IsHidden__c FROM MAJAX__Display_Text_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
         
         if (entries.isEmpty()) {
             return null;
