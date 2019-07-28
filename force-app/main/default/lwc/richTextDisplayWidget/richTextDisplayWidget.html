@@ -1,0 +1,7 @@
+<template>
+    <div if:true={loading}>
+        Loading, please wait...
+    </div>
+    <lightning-formatted-rich-text if:false={loading} value={renderedContent}>
+        </lightning-formatted-rich-text>
+</template>

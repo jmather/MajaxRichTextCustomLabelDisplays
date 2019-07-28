@@ -1,0 +1,19 @@
+<template>
+    <div if:true={disabled} id="spinnerId" class="slds-spinner_container">
+        <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+            <span class="slds-assistive-text">Saving...</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+        </div>
+    </div>
+    <lightning-tabset variant="vertical">
+        <template if:true={entries.data} for:each={entries.data} for:item="entry">
+            <lightning-tab key={entry.DeveloperName} label={entry.MasterLabel}>
+                <c-rich-text-display-edit onpreupdate={handlePreAction} onprehide={handlePreAction} onpostupdate={handlePostAction} onposthide={handlePostAction} entry={entry}></c-rich-text-display-edit>
+            </lightning-tab>
+        </template>
+        <lightning-tab label="New Entry">
+            <c-rich-text-display-create onprecreate={handlePreAction} onpostcreate={handlePostAction}></c-rich-text-display-create>
+        </lightning-tab>
+    </lightning-tabset>
+</template>

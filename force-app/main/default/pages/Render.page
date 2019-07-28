@@ -1,0 +1,8 @@
+<apex:page showHeader="false" sidebar="false" controller="RenderController">
+    <apex:outputText value="<!-- title: start -->" escape="false"></apex:outputText>
+    <apex:outputText value="{!renderedTitle}" escape="false"></apex:outputText>
+    <apex:outputText value="<!-- title: end -->" escape="false"></apex:outputText>
+    <apex:outputText value="<!-- content: start -->" escape="false"></apex:outputText>
+    <apex:outputText value="{!renderedContent}" escape="false"></apex:outputText>
+    <apex:outputText value="<!-- content: end -->" escape="false"></apex:outputText>
+</apex:page>

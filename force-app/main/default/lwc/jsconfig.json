@@ -1,0 +1,47 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "paths": {
+            "c/RichTextDisplayManager": [
+                "RichTextDisplayManager/RichTextDisplayManager.js"
+            ],
+            "c/RichTextDisplayList": [
+                "RichTextDisplayList/RichTextDisplayList.js"
+            ],
+            "c/richTextDisplayList": [
+                "richTextDisplayList/richTextDisplayList.js"
+            ],
+            "c/RichTextDisplayEdit": [
+                "RichTextDisplayEdit/RichTextDisplayEdit.js"
+            ],
+            "c/richTextDisplayEdit": [
+                "richTextDisplayEdit/richTextDisplayEdit.js"
+            ],
+            "c/RichTextDisplayCreate": [
+                "RichTextDisplayCreate/RichTextDisplayCreate.js"
+            ],
+            "c/richTextDisplayCreate": [
+                "richTextDisplayCreate/richTextDisplayCreate.js"
+            ],
+            "c/LightningCustomLabelDisplay": [
+                "LightningCustomLabelDisplay/LightningCustomLabelDisplay.js"
+            ],
+            "c/RichTextDisplayWidget": [
+                "RichTextDisplayWidget/RichTextDisplayWidget.js"
+            ],
+            "c/richTextDisplayWidget": [
+                "richTextDisplayWidget/richTextDisplayWidget.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}
