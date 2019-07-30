@@ -78,6 +78,10 @@ public without sharing class EntryDAO {
         return TransactionDAO.getStatus(cb.txnId);
     }
 
+    public static String generateId() {
+        return 'I' + Guid.generateId().replace('-', '_');
+    }
+
     class Callback implements Metadata.DeployCallback {
         public String txnId;
 

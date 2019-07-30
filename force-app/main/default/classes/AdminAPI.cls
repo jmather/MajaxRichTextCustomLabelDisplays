@@ -11,7 +11,7 @@ public without sharing class AdminAPI {
 
     @AuraEnabled
     public static String createEntry(String label, String title, String content) {
-        String developerName = Guid.generateId();
+        String developerName = EntryDAO.generateId();
         MAJAX__Display_Entry__mdt entry = new MAJAX__Display_Entry__mdt(
             MasterLabel = label,
             DeveloperName = developerName,
