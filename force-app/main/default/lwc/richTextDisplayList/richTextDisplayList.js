@@ -1,10 +1,13 @@
-import { LightningElement, wire, track } from 'lwc';
+import { LightningElement, wire, track, api } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import getEntries from '@salesforce/apex/AdminAPI.getEntries'
 import isDebugging from '@salesforce/apex/AdminAPI.isDebugging'
 
+let enableDebugging = false;
+
 export default class RichTextDisplayList extends LightningElement {
+    @api enableDebugging;
     @track error;
     @track disabled = false;
     @track disabledAction = null;
@@ -12,13 +15,14 @@ export default class RichTextDisplayList extends LightningElement {
     @wire(getEntries)
     entries;
 
-    @wire(isDebugging)
-    isDebugging = false;
-
     static debug() {
-        if (this.isDebugging) {
+        if (enableDebugging) {
             console.log.apply(console, arguments);
         }
+    }
+
+    connectedCallback() {
+        enableDebugging = this.enableDebugging;
     }
 
     handlePreAction(event) {

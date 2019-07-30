@@ -1,17 +1,17 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import createEntry from '@salesforce/apex/AdminAPI.createEntry'
 import getTransactionStatus from '@salesforce/apex/AdminAPI.getTransactionStatus'
 
 class JobHelper {
     static whenComplete(promise, callback, maxCheckCount = 15) {
         return promise.then(statusJson => {
-            var status = JSON.parse(statusJson);
-            var nextIteration = () => {
-                var check = getTransactionStatus({ txnId: status.txnId, count: status.count });
+            const status = JSON.parse(statusJson);
+            const nextIteration = () => {
+                const check = getTransactionStatus({ txnId: status.txnId, count: status.count });
                 return JobHelper.whenComplete(check, callback, maxCheckCount);    
             };
 
-            console.log('[richTextDisplayCreate.whenComplete]', { status: JSON.stringify(status) });
+            RichTextDisplayCreate.log('[richTextDisplayCreate.whenComplete]', { status: JSON.stringify(status) });
     
             if (status.isComplete === true) {
                 callback(status);
@@ -19,7 +19,7 @@ class JobHelper {
             }
 
             if (status.count > maxCheckCount) {
-                console.log('[richTextDisplayCreate.whenComplete] bailing out...');
+                RichTextDisplayCreate.log('[richTextDisplayCreate.whenComplete] bailing out...');
                 return null;
             }
 
@@ -30,12 +30,25 @@ class JobHelper {
     }
 }
 
+let enableDebugging = false;
+
 export default class RichTextDisplayCreate extends LightningElement {
+    @api enableDebugging = false;
     @track label;
     @track developerName = '';
     @track title = '';
     @track content = '';
     @track disabled = false;
+
+    static log() {
+        if (enableDebugging) {
+            console.log.apply(console, arguments);
+        }
+    }
+
+    connectedCallback() {
+        enableDebugging = this.enableDebugging;
+    }
 
     updateLabel(event) {
         this.label = event.detail.value;
@@ -54,7 +67,7 @@ export default class RichTextDisplayCreate extends LightningElement {
     }
 
     handleCreate() {
-        var obj = {
+        const obj = {
             label: this.label,
             developerName: this.developerName,
             title: this.title,
@@ -62,7 +75,7 @@ export default class RichTextDisplayCreate extends LightningElement {
             action: 'create',
         };
 
-        var controller = this;
+        const controller = this;
 
         controller.disabled = true;
 
@@ -71,7 +84,7 @@ export default class RichTextDisplayCreate extends LightningElement {
         JobHelper.whenComplete(
             createEntry(obj), 
             (status) => {
-                console.log('[richTextDisplayCreate.handleCreate]', { status });
+                RichTextDisplayCreate.log('[richTextDisplayCreate.handleCreate]', { status });
                 controller.dispatchEvent(new CustomEvent('postcreate', { detail: obj }));
 
                 controller.label = '';

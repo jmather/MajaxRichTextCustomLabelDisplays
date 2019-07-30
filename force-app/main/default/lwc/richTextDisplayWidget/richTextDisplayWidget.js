@@ -2,23 +2,29 @@ import { LightningElement, api, track, wire } from 'lwc';
 import callRenderText from '@salesforce/apex/WidgetAPI.renderText'
 import callRenderDeveloperName from '@salesforce/apex/WidgetAPI.renderDeveloperName'
 
+let enableDebugging = false;
+
 export default class RichTextDisplayWidget extends LightningElement {
     @api mode = 'developerName';
     @api developerName;
     @api title;
     @api content;
-    @api isDebugging = false;
+    @api enableDebugging = false;
     @track loading = true;
     @track renderedTitle = '';
     @track renderedContent = '';
 
     static debug() {
-        if (this.isDebugging) {
+        if (enableDebugging) {
             console.log.apply(console, arguments);
         }
     }
 
-    @wire(callRenderText, { title: '$title', content: '$content', isDebugging: '$isDebugging' })
+    connectedCallback() {
+        enableDebugging = this.enableDebugging;
+    }
+
+    @wire(callRenderText, { title: '$title', content: '$content', enableDebug: '$enableDebugging' })
     handleRenderingText({ error, data }) {
         RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingText title', this.title);
         RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingText content', this.content);
@@ -33,7 +39,7 @@ export default class RichTextDisplayWidget extends LightningElement {
         this.handleResponseData(data, error);
     }
 
-    @wire(callRenderDeveloperName, { developerName: '$developerName', isDebugging: '$isDebugging' })
+    @wire(callRenderDeveloperName, { developerName: '$developerName', enableDebug: '$enableDebugging' })
     handleRenderingDeveloperName({ error, data }) {
         RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingDeveloperName developerName', this.developerName);
         RichTextDisplayWidget.debug('RichTextDisplayWidget.handleRenderingDeveloperName data', JSON.stringify(data));

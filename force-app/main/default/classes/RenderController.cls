@@ -6,10 +6,12 @@ public without sharing class RenderController {
         String content = ApexPages.currentPage().getParameters().get('content');
         String title = ApexPages.currentPage().getParameters().get('title');
         String developerName = ApexPages.currentPage().getParameters().get('developerName');
-        
+        Debug.enabled = Boolean.valueOf(ApexPages.currentPage().getParameters().get('debug'));
+
         Debug.log('[RenderController] passed content: ' + content);
         Debug.log('[RenderController] passed title: ' + title);
         Debug.log('[RenderController] passed developerName: ' + developerName);
+        Debug.log('[RenderController] passed debug: ' + Debug.enabled);
 
         if (developerName != null && String.isBlank(developerName) == false) {
             setFromEntry(developerName);
@@ -23,6 +25,11 @@ public without sharing class RenderController {
 
         Debug.log('[RenderController] content: ' + this.content);
         Debug.log('[RenderController] title: ' + this.title);
+    }
+
+    public String getData() {
+        RenderedData data = new RenderedData(getRenderedTitle(), getRenderedContent());
+        return EncodingUtil.base64Encode(Blob.valueOf(JSON.serialize(data)));
     }
     
     public String getRenderedContent() {

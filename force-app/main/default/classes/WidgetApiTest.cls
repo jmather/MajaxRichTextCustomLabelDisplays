@@ -12,7 +12,7 @@ public with sharing class WidgetApiTest {
 
         Test.startTest();
 
-        WidgetAPI.RenderData data = (WidgetAPI.RenderData) JSON.deserialize(WidgetAPI.renderText(title, content), WidgetAPI.RenderData.class);
+        RenderedData data = (RenderedData) JSON.deserialize(WidgetAPI.renderText(title, content, false), RenderedData.class);
 
         Test.stopTest();
 
@@ -27,7 +27,7 @@ public with sharing class WidgetApiTest {
             System.assertEquals(url, req.getEndpoint());
             System.assertEquals('GET', req.getMethod());
 
-            String content = '<html><body><!--*********-->Foo<!--*******--><!--*******-->Bar<!--*******--></body></html>';
+            String content = '<html><body><!--**********************--><!--******************************-->eyJ0aXRsZSI6IiIsImNvbnRlbnQiOiJUZXN0IDIifQ==<!--********************--><!--****************************--></body></html>';
             HttpResponse resp = new HttpResponse();
             resp.setBody(content);
             resp.setStatusCode(200);

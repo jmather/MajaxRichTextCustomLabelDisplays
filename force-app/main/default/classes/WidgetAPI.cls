@@ -1,36 +1,49 @@
 public without sharing class WidgetAPI {
     @AuraEnabled(Cacheable=true)
-    public static String renderText(String title, String content, Boolean isDebugging) {
-        Debug.enabled = (isDebugging != null) ? isDebugging : false;
+    public static String renderText(String title, String content, Boolean enableDebug) {
+        Debug.enabled = (enableDebug != null) ? enableDebug : false;
 
         Debug.log('[WidgetAPI.renderText] title: ' + title);
         Debug.log('[WidgetAPI.renderText] content: ' + content);
         String safeTitle = EncodingUtil.urlEncode(title, 'UTF-8');
         String safeContent = EncodingUtil.urlEncode(content, 'UTF-8');
         PageReference render = Page.Render;
-        String url = render.getUrl() + '?title=' + safeTitle + '&content=' + safeContent;
+        String url = render.getUrl() + '?title=' + safeTitle + '&content=' + safeContent + '&debug=' + enableDebug;
 
-        String result = JSON.serialize(parseRenderedText(url));
+        String result = getRenderedTextFromUrl(url);
         Debug.log('[WidgetAPI.renderText] result: ' + result);
         return result;
     }
 
     @AuraEnabled(Cacheable=true)
-    public static String renderDeveloperName(String developerName, Boolean isDebugging) {
-        Debug.enabled = (isDebugging != null) ? isDebugging : false;
+    public static String renderDeveloperName(String developerName, Boolean enableDebug) {
+        Debug.enabled = (enableDebug != null) ? enableDebug : false;
 
         Debug.log('[WidgetAPI.renderDeveloperName] developerName: ' + developerName);
         PageReference render = Page.Render;
-        String url = render.getUrl() + '?developerName=' + developerName;
+        String url = render.getUrl() + '?developerName=' + developerName + '&debug=' + enableDebug;
 
-        String result = JSON.serialize(parseRenderedText(url));
+        String result = getRenderedTextFromUrl(url);
         Debug.log('[WidgetAPI.renderDeveloperName] result: ' + result);
+
         return result;
     }
 
-    @TestVisible
-    private static RenderData parseRenderedText(String path) {
-        String content = '';
+    private static String getRenderedTextFromUrl(String path) {
+        String response = getResponseFromUrl(path);
+        String content = getContentFromResponse(response);
+        Debug.log('[WidgetAPI.getRenderedText] content: ' + content);
+
+        if (content == null) {
+            return JSON.serialize(new RenderedData('Error', 'We encountered an error processing the output.'));
+        }
+
+        return content;
+    }
+
+    private static String getResponseFromUrl(String path) {
+        Debug.log('[WidgetAPI.getContentFromUrl] path: ' + path);
+        String content;
 
         if (Test.isRunningTest()) {
             HttpRequest req = new HttpRequest();
@@ -44,46 +57,23 @@ public without sharing class WidgetAPI {
             content = new PageReference(path).getContent().toString();
         }
 
-        Debug.log('[WidgetAPI.parseRenderedText] response: ' + content);
-
-        String commentRegex = '\\<\\!--\\*+--\\>';
-        String matchRegex = commentRegex + '(.*)' + commentRegex + commentRegex + '(.*)' + commentRegex;
-
-        Pattern p = Pattern.compile(matchRegex);
-        Matcher m = p.matcher(content);
-
-        if (m.find()) {
-            return new RenderData(m.group(1), m.group(2));
-        }
-
-        return new RenderData('Error', 'We encountered an error processing the output.');
+        return content;
     }
 
-    public class RenderData {
-        public String title;
-        public String content;
-        public Boolean isDebugging = Debug.enabled;
+    private static String getContentFromResponse(String response) {
+        Debug.log('[WidgetAPI.getResponseFromContent] response: ' + response);
 
-        public RenderData(List<String> text) {
-            if (text.isEmpty()) {
-                this.title = '';
-                this.content = '';
-                return;
-            }
+        String commentRegex = '\\<\\!--\\*+--\\>';
+        String matchRegex = commentRegex + commentRegex + '(.*)' + commentRegex + commentRegex;
 
-            if (text.size() == 1) {
-                this.title = '';
-                this.content = text[0];
-                return;
-            }
+        Pattern p = Pattern.compile(matchRegex);
+        Matcher m = p.matcher(response);
 
-            this.title = text[0];
-            this.content = text[1];
+        if (m.find()) {
+            String content = m.group(1);
+            return EncodingUtil.base64Decode(content).toString();
         }
 
-        public RenderData(String title, String content) {
-            this.title = title;
-            this.content = content;
-        }
+        return null;
     }
 }

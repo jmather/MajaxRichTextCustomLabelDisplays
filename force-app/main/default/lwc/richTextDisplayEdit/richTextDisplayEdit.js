@@ -1,4 +1,4 @@
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import updateEntry from '@salesforce/apex/AdminAPI.updateEntry'
 import hideEntry from '@salesforce/apex/AdminAPI.hideEntry'
 import getTransactionStatus from '@salesforce/apex/AdminAPI.getTransactionStatus'
@@ -12,7 +12,7 @@ class JobHelper {
                 return JobHelper.whenComplete(check, callback, maxCheckCount);
             };
 
-            console.log('[richTextDisplayCreate.whenComplete]', { status });
+            RichTextDisplayEdit.log('[richTextDisplayCreate.whenComplete]', { status });
 
             if (status.isComplete === true) {
                 callback(status);
@@ -20,7 +20,7 @@ class JobHelper {
             }
 
             if (status.count > maxCheckCount) {
-                console.log('[richTextDisplayCreate.whenComplete] bailing out...');
+                RichTextDisplayEdit.log('[richTextDisplayCreate.whenComplete] bailing out...');
                 return null;
             }
 
@@ -31,9 +31,11 @@ class JobHelper {
     }
 }
 
+let enableDebugging = false;
+
 export default class RichTextDisplayEdit extends LightningElement {
     @api entry;
-    @api isDebugging = false;
+    @api enableDebugging = false;
     @track disabled = false;
     @track disabledAction = null;
 
@@ -42,19 +44,20 @@ export default class RichTextDisplayEdit extends LightningElement {
     @track content;
 
     static log() {
-        if (this.isDebugging) {
+        if (enableDebugging) {
             console.log.apply(console, arguments);
         }
     }
 
     connectedCallback() {
+        enableDebugging = this.enableDebugging;
         this.label = this.entry.MasterLabel || '';
         this.title = this.entry.MAJAX__Title__c || '';
         this.content = this.entry.MAJAX__Content__c || '';
     }
 
     handleUpdate() {
-        var obj = {
+        const obj = {
             developerName: this.entry.DeveloperName,
             label: this.label,
             title: this.title,
@@ -65,7 +68,7 @@ export default class RichTextDisplayEdit extends LightningElement {
     }
 
     handleHide() {
-        var obj = {
+        const obj = {
             developerName: this.entry.DeveloperName,
         };
 
@@ -73,7 +76,7 @@ export default class RichTextDisplayEdit extends LightningElement {
     }
 
     handleAction(actionName, obj, action) {
-        var controller = this;
+        const controller = this;
         obj.action = actionName;
         
         console.log('[RichTextDisplayEdit.handleAction]', { actionName });
