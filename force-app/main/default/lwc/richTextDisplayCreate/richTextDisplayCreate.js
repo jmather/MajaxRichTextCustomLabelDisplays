@@ -7,7 +7,7 @@ class JobHelper {
         return promise.then(statusJson => {
             const status = JSON.parse(statusJson);
             const nextIteration = () => {
-                const check = getTransactionStatus({ txnId: status.txnId, count: status.count });
+                const check = getTransactionStatus({ txnId: status.txnId, count: status.count, enableDebugging });
                 return JobHelper.whenComplete(check, callback, maxCheckCount);    
             };
 
@@ -68,6 +68,7 @@ export default class RichTextDisplayCreate extends LightningElement {
 
     handleCreate() {
         const obj = {
+            enableDebugging,
             label: this.label,
             developerName: this.developerName,
             title: this.title,

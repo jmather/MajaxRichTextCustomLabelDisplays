@@ -2,7 +2,6 @@ import { LightningElement, wire, track, api } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent'
 import getEntries from '@salesforce/apex/AdminAPI.getEntries'
-import isDebugging from '@salesforce/apex/AdminAPI.isDebugging'
 
 let enableDebugging = false;
 
@@ -11,6 +10,11 @@ export default class RichTextDisplayList extends LightningElement {
     @track error;
     @track disabled = false;
     @track disabledAction = null;
+    @track action = null;
+    columns = [
+        { label: 'Name', fieldName: 'MasterLabel', type: 'string' },
+        { label: 'Title', fieldName: 'MAJAX__Title__c', type: 'string' },
+    ];
 
     @wire(getEntries)
     entries;
@@ -23,6 +27,10 @@ export default class RichTextDisplayList extends LightningElement {
 
     connectedCallback() {
         enableDebugging = this.enableDebugging;
+    }
+
+    updateSelection(event) {
+        RichTextDisplayList.debug('RichTextDisplayList.updateSelection', event);
     }
 
     handlePreAction(event) {

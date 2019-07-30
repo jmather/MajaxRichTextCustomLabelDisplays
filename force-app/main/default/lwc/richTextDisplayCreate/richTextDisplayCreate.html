@@ -1,24 +1,32 @@
-<template>    
-    <lightning-messages></lightning-messages>
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_7-of-12">
+            <lightning-card title="Create New Entry">
+                <div class="slds-p-around_medium">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input type="string" required disabled={disabled} label="Name" value={label} onchange={updateLabel}></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <lightning-input type="string" disabled={disabled} label="Title" value={title} onchange={updateTitle}></lightning-input>
+                        </div>
+                    </div>
+                    <label for="create_content" class="slds-form-element__label slds-no-flex">
+                        <abbr title="required" class="slds-required">*</abbr>
+                        Content
+                    </label>
+                    <lightning-input-rich-text value={content} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>
 
-    <lightning-input type="string" required disabled={disabled} label="Name" value={label} onchange={updateLabel}></lightning-input>
-    <lightning-input type="string" required disabled={disabled} label="Title" value={title} onchange={updateTitle}></lightning-input>
-    <label for="create_content" class="slds-form-element__label slds-no-flex">
-        <abbr title="required" class="slds-required">*</abbr>
-        Content
-    </label>
-    <lightning-input-rich-text value={content} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>
+                    <br />
 
-    <br />
-
-    <h1>Rendered Content</h1>
-
-    <c-rich-text-display-widget mode="text" title={title} content={content}></c-rich-text-display-widget>
-
-    <br />
-    <div class="button-container slds-text-align_right">
-        <div class="actionsContainer">
-            <lightning-button variant="brand" disabled={disabled} label="Create" title="Create" onclick={handleCreate} class="slds-m-left_x-small"></lightning-button>
+                </div>
+                <div slot="footer" class="slds-text-align_right">
+                    <lightning-button variant="brand" disabled={disabled} label="Create" title="Create" onclick={handleCreate} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_5-of-12 slds-p-left_large">
+            <c-rich-text-display-widget enable-debugging={enableDebugging} mode="text" note="Example Display" title={title} content={content}></c-rich-text-display-widget>
         </div>
     </div>
 </template>

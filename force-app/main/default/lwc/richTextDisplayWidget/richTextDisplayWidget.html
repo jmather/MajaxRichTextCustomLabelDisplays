@@ -1,8 +1,17 @@
 <template>
-    <div if:true={loading}>
-        Loading, please wait...
-    </div>
-    <h1 if:false={loading}>{renderedTitle}</h1>
-
-    <lightning-formatted-rich-text if:false={loading} value={renderedContent}></lightning-formatted-rich-text>
+    <lightning-card if:true={loading}>
+        <div class="slds-p-around_medium">
+            Loading, please wait...
+        </div>
+    </lightning-card>
+    <lightning-card if:false={loading} title={renderedTitle}>
+        <div if:true={note} slot="actions">
+            <span class="slds-pill">
+                <span class="slds-pill__label slds-p-right_xxx-small" title="Example of how the element will be rendered.">{note}</span>
+            </span>
+        </div>
+        <div class="slds-p-around_medium">
+            <lightning-formatted-rich-text if:false={loading} value={renderedContent}></lightning-formatted-rich-text>
+        </div>
+    </lightning-card>
 </template>

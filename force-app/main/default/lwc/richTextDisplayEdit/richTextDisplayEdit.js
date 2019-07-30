@@ -8,7 +8,7 @@ class JobHelper {
         return promise.then(statusJson => {
             var status = JSON.parse(statusJson);
             var nextIteration = () => {
-                var check = getTransactionStatus({ txnId: status.txnId, count: status.count });
+                var check = getTransactionStatus({ txnId: status.txnId, count: status.count, enableDebugging });
                 return JobHelper.whenComplete(check, callback, maxCheckCount);
             };
 
@@ -58,6 +58,7 @@ export default class RichTextDisplayEdit extends LightningElement {
 
     handleUpdate() {
         const obj = {
+            enableDebugging,
             developerName: this.entry.DeveloperName,
             label: this.label,
             title: this.title,

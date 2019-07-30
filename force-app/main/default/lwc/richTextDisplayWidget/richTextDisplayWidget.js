@@ -9,6 +9,7 @@ export default class RichTextDisplayWidget extends LightningElement {
     @api developerName;
     @api title;
     @api content;
+    @api note;
     @api enableDebugging = false;
     @track loading = true;
     @track renderedTitle = '';

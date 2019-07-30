@@ -6,14 +6,43 @@
             <div class="slds-spinner__dot-b"></div>
         </div>
     </div>
-    <lightning-tabset variant="vertical">
-        <template if:true={entries.data} for:each={entries.data} for:item="entry">
-            <lightning-tab key={entry.DeveloperName} label={entry.MasterLabel}>
-                <c-rich-text-display-edit onpreupdate={handlePreAction} onprehide={handlePreAction} onpostupdate={handlePostAction} onposthide={handlePostAction} entry={entry}></c-rich-text-display-edit>
-            </lightning-tab>
-        </template>
-        <lightning-tab label="New Entry">
-            <c-rich-text-display-create onprecreate={handlePreAction} onpostcreate={handlePostAction}></c-rich-text-display-create>
-        </lightning-tab>
-    </lightning-tabset>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_2-of-12">
+            <div class="slds-card">
+                <div class="slds-p-around_medium">Create New Entry</div>
+            </div>
+            <template if:true={entries.data} iterator:it={entries.data}>
+                <div if:true={it.first} key={it.value.DeveloperName} class="slds-card slds-has-bottom-magnet">
+                    <div class="slds-p-around_medium">{it.value.MasterLabel}</div>
+                </div>
+
+                <div if:false={it.first} key={it.value.DeveloperName} class="slds-card slds-has-top-magnet slds-has-bottom-magnet">
+                    <div class="slds-p-around_medium">{it.value.MasterLabel}</div>
+                </div>
+            </template>
+        </div>
+        <div class="slds-col slds-size_10-of-12">
+            <c-rich-text-display-create enable-debugging={enableDebugging} onprecreate={handlePreAction} onpostcreate={handlePostAction}></c-rich-text-display-create>
+        </div>
+    </div>
+<!--    <div class="c-container">-->
+<!--        <div class="page-section page-right">-->
+<!--            <lightning-datatable-->
+<!--                    key-field="DeveloperName"-->
+<!--                    data={entries.data}-->
+<!--                    columns={columns}>-->
+<!--            </lightning-datatable>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <lightning-tabset variant="vertical">-->
+<!--        <template if:true={entries.data} for:each={entries.data} for:item="entry">-->
+<!--            <lightning-tab key={entry.DeveloperName} label={entry.MasterLabel}>-->
+<!--                <c-rich-text-display-edit enable-debugging={enableDebugging} onpreupdate={handlePreAction} onprehide={handlePreAction} onpostupdate={handlePostAction} onposthide={handlePostAction} entry={entry}></c-rich-text-display-edit>-->
+<!--            </lightning-tab>-->
+<!--        </template>-->
+<!--        <lightning-tab label="New Entry">-->
+<!--            <c-rich-text-display-create enable-debugging={enableDebugging} onprecreate={handlePreAction} onpostcreate={handlePostAction}></c-rich-text-display-create>-->
+<!--        </lightning-tab>-->
+<!--    </lightning-tabset>-->
 </template>

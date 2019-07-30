@@ -4,13 +4,9 @@ public without sharing class AdminAPI {
         return EntryDAO.getEntries();
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static Boolean isDebugging() {
-        return Debug.enabled;
-    }
-
     @AuraEnabled
-    public static String createEntry(String label, String title, String content) {
+    public static String createEntry(String label, String title, String content, Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
         String developerName = EntryDAO.generateId();
         MAJAX__Display_Entry__mdt entry = new MAJAX__Display_Entry__mdt(
             MasterLabel = label,
@@ -27,7 +23,8 @@ public without sharing class AdminAPI {
     }
 
     @AuraEnabled
-    public static String updateEntry(String developerName, String label, String title, String content) {
+    public static String updateEntry(String developerName, String label, String title, String content, Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
         MAJAX__Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
 
         if (label != null) {
@@ -50,7 +47,8 @@ public without sharing class AdminAPI {
     }
 
     @AuraEnabled
-    public static String hideEntry(String developerName) {
+    public static String hideEntry(String developerName, Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
         MAJAX__Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
 
         AsyncTransactionStatus status = EntryDAO.hideEntry(entry);
@@ -61,7 +59,8 @@ public without sharing class AdminAPI {
     }
 
     @AuraEnabled
-    public static String getTransactionStatus(String txnId, Integer count) {
+    public static String getTransactionStatus(String txnId, Integer count, Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
         Debug.log('[AdminAPI.getTransactionStatus] txnId: ' + txnId);
         AsyncTransactionStatus status = TransactionDAO.getStatus(txnId, count);
         Debug.log('[AdminAPI.getTransactionStatus] status: ' + status);
