@@ -1,5 +1,12 @@
 public without sharing class WidgetAPI {
     @AuraEnabled(Cacheable=true)
+    public static String getEntry(String developerName, Boolean enableDebug) {
+        Debug.enabled = (enableDebug != null) ? enableDebug : false;
+        Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
+        return JSON.serialize(entry);
+    }
+
+    @AuraEnabled(Cacheable=true)
     public static String renderText(String title, String content, Boolean enableDebug) {
         Debug.enabled = (enableDebug != null) ? enableDebug : false;
 

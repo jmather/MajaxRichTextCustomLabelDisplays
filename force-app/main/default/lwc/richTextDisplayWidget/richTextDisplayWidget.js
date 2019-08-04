@@ -1,6 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import callRenderText from '@salesforce/apex/WidgetAPI.renderText'
-import callRenderDeveloperName from '@salesforce/apex/WidgetAPI.renderDeveloperName'
+import callRenderText from '@salesforce/apex/WidgetAPI.renderText';
+import callRenderDeveloperName from '@salesforce/apex/WidgetAPI.renderDeveloperName';
+import getEntry from '@salesforce/apex/WidgetAPI.getEntry';
 import debug from 'c/debug';
 
 export default class RichTextDisplayWidget extends LightningElement {
@@ -88,26 +89,41 @@ export default class RichTextDisplayWidget extends LightningElement {
             return;
         }
 
-        this.loading = false;
-
         this.handleResponseData(data, error);
     }
 
-    @wire(callRenderDeveloperName, { developerName: '$developerName', enableDebug: '$enableDebugging' })
-    handleRenderingDeveloperName({ error, data }) {
-        debug(this.enableDebugging, 'RichTextDisplayWidget.handleRenderingDeveloperName developerName', this.developerName);
-        debug(this.enableDebugging, 'RichTextDisplayWidget.handleRenderingDeveloperName data', JSON.stringify(data));
-
+    /**
+     *
+     * @param error
+     * @param {String} data
+     */
+    @wire(getEntry, { developerName: '$developerName', enableDebug: '$enableDebugging' })
+    handleGetEntry({ error, data }) {
+        debug(this.enableDebugging, 'RichTextDisplayWidget.handleGetEntry', { error, data });
         if (this.mode !== 'developerName') {
             return;
         }
 
-        this.loading = false;
-
-        this.handleResponseData(data, error);
+        if (data) {
+            /**
+             *
+             * @type {MAJAX__Display_Entry__mdt}
+             */
+            const entry = JSON.parse(data);
+            this.content = entry.MAJAX__Content__c;
+            this.title = entry.MAJAX__Title__c;
+            this.url = entry.MAJAX__URL__c;
+            this.icon = entry.MAJAX__Icon__c;
+            this.displayStyle = entry.MAJAX__DisplayStyle__c;
+            this.displayTitle = entry.MAJAX__DisplayTitle__c;
+            const controller = this;
+            return callRenderText({ title: this.title, content: this.content, enableDebug: this.enableDebugging })
+                        .then((response) => controller.handleResponseData(response));
+        }
     }
 
     handleResponseData(dataJson, error) {
+        this.loading = false;
         if (dataJson) {
             const data = JSON.parse(dataJson);
             this.renderedTitle = data.title;
