@@ -55,6 +55,7 @@ export default class RtldWidget extends LightningElement {
     }
 
     renderedCallback() {
+        this.loading = false;
         const data = {
             values: {
                 title: this.renderedTitle,
@@ -123,6 +124,7 @@ export default class RtldWidget extends LightningElement {
 
     handleResponseData(dataJson, error) {
         this.loading = false;
+
         if (dataJson) {
             const data = JSON.parse(dataJson);
             this.renderedTitle = data.title;
