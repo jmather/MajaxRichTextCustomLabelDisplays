@@ -23,7 +23,7 @@ public with sharing class WidgetApiTest {
     class TestMock implements HttpCalloutMock {
         public HttpResponse respond(HttpRequest req) {
             String baseUrl = Url.getOrgDomainUrl().toExternalForm();
-            String url = baseUrl + '/apex/majax__render?title=Foo&content=Bar';
+            String url = baseUrl + '/apex/render?title=Foo&content=Bar';
             System.assertEquals(url, req.getEndpoint());
             System.assertEquals('GET', req.getMethod());
 

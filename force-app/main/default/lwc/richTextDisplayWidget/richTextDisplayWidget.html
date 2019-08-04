@@ -4,14 +4,26 @@
             Loading, please wait...
         </div>
     </lightning-card>
-    <lightning-card if:false={loading} title={renderedTitle}>
-        <div if:true={note} slot="actions">
-            <span class="slds-pill">
-                <span class="slds-pill__label slds-p-right_xxx-small" title="Example of how the element will be rendered.">{note}</span>
-            </span>
-        </div>
+    <lightning-card if:true={displayCardWithUrl} title={titleDisplay} icon-name={iconDisplay}>
         <div class="slds-p-around_medium">
-            <lightning-formatted-rich-text if:false={loading} value={renderedContent}></lightning-formatted-rich-text>
+            <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
+        </div>
+        <a slot="footer" class="slds-button" title="Read more" href={urlDisplay}>Read More</a>
+    </lightning-card>
+    <lightning-card if:true={displayCardWithoutUrl} title={titleDisplay} icon-name={iconDisplay}>
+        <div class="slds-p-around_medium">
+            <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
         </div>
     </lightning-card>
+    <ul if:true={displayTile} class="slds-has-dividers_around-space">
+        <li class="slds-item">
+            <lightning-tile if:true={hasIcon} label={titleDisplay} href={urlDisplay} class="slds-tile_board" type="media">
+                <lightning-icon slot="media" icon-name={iconDisplay}></lightning-icon>
+                <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
+            </lightning-tile>
+            <lightning-tile if:false={hasIcon} label={titleDisplay} href={urlDisplay} class="slds-tile_board">
+                <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
+            </lightning-tile>
+        </li>
+    </ul>
 </template>

@@ -1,0 +1,26 @@
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_6-of-12">
+            <lightning-input type="string" required disabled={disabled} label="Name" value={updatedEntry.MasterLabel} onchange={updateLabel}></lightning-input>
+        </div>
+        <div class="slds-col slds-size_6-of-12">
+            <lightning-input type="string" disabled={disabled} label="Title" value={updatedEntry.MAJAX__Title__c} onchange={updateTitle}></lightning-input>
+        </div>
+    </div>
+    <label for="create_content" class="slds-form-element__label slds-no-flex">
+        <abbr title="required" class="slds-required">*</abbr>
+        Content
+    </label>
+    <lightning-input-rich-text value={updatedEntry.MAJAX__Content__c} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>
+
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_6-of-12">
+            <lightning-combobox required disabled={disabled} label="Display Style" value={updatedEntry.MAJAX__DisplayStyle__c} options={displayStyleOptions} onchange={updateDisplayStyle}></lightning-combobox>
+        </div>
+        <div class="slds-col slds-size_6-of-12 slds-align-content-center">
+            <c-rtld-entry-editor-icon-select value={updatedEntry.MAJAX__Icon__c} enable-debugging={enableDebugging} onchange={updateIcon}></c-rtld-entry-editor-icon-select>
+        </div>
+    </div>
+    <lightning-input type="string" disabled={disabled} label="URL" value={updatedEntry.MAJAX__URL__c} onchange={updateURL}></lightning-input>
+    <lightning-input type="checkbox" disabled={disabled} label="Display Title?" checked={updatedEntry.MAJAX__DisplayTitle__c} onchange={updateDisplayTitle}></lightning-input>
+</template>

@@ -1,29 +1,56 @@
 <template>
-    <lightning-record-edit-form
-    id={entry.DeveloperName}
-    record-id={entry.Id}
-    object-api-name="MAJAX__Display_Entry__mdt">
-
-        <lightning-messages></lightning-messages>
-
-        <lightning-input type="string" required disabled={disabled} label="Name" value={entry.MasterLabel} onchange={updateName}></lightning-input>
-        <lightning-input type="string" required disabled={disabled} label="Title" value={entry.MAJAX__Title__c} onchange={updateTitle}></lightning-input>
-        <label for="create_content" class="slds-form-element__label slds-no-flex">
-            <abbr title="required" class="slds-required">*</abbr>
-            Content
-        </label>
-
-        <lightning-input-rich-text value={entry.MAJAX__Content__c} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>
-
-        <br />
-        <h1>Rendered Content</h1>
-        <c-rich-text-display-widget enable-debugging={enableDebugging} mode="text" title={title} content={content}></c-rich-text-display-widget>
-        <br />
-        <div class="button-container slds-text-align_right">
-            <div class="actionsContainer">
-                <lightning-button variant="destructive" disabled={disabled} label="Hide" title="Hide" onclick={handleHide} class="slds-m-left_x-small"></lightning-button>
-                <lightning-button variant="brand" disabled={disabled} label="Update" title="Update" onclick={handleUpdate} class="slds-m-left_x-small"></lightning-button>
-            </div>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_7-of-12">
+            <lightning-card title="Edit Entry">
+                <lightning-button disabled={disabled} label="Close" title="Close" onclick={handleCancelClick} slot="actions"></lightning-button>
+                <div class="slds-p-around_medium">
+                    <c-entry-editor entry={entry} enable-debugging={enableDebugging} disabled={disabled} onupdate={handleEditorUpdate}></c-entry-editor>
+                </div>
+                <div slot="footer" class="slds-text-align_right">
+                    <lightning-button variant="destructive" disabled={disabled} label="Hide" title="Hide" onclick={handleHideClick} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" disabled={disabled} label="Update" title="Update" onclick={handleUpdateClick} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </lightning-card>
         </div>
-    </lightning-record-edit-form>
+        <div class="slds-col slds-size_5-of-12 slds-p-left_large">
+            <c-rich-text-display-widget
+                    enable-debugging={enableDebugging}
+                    mode="text" note="Example Display"
+                    title={updatedEntry.MAJAX__Title__c}
+                    content={updatedEntry.MAJAX__Content__c}
+                    display-style={updatedEntry.MAJAX__DisplayStyle__c}
+                    display-title={updatedEntry.MAJAX__DisplayTitle__c}
+                    url={updatedEntry.MAJAX__URL__c}
+                    icon={updatedEntry.MAJAX__Icon__c}>
+            </c-rich-text-display-widget>
+        </div>
+    </div>
+
+<!--    <lightning-record-edit-form-->
+<!--    id={entry.DeveloperName}-->
+<!--    record-id={entry.Id}-->
+<!--    object-api-name="MAJAX__Display_Entry__mdt">-->
+
+<!--        <lightning-messages></lightning-messages>-->
+
+<!--        <lightning-input type="string" required disabled={disabled} label="Name" value={entry.MasterLabel} onchange={updateName}></lightning-input>-->
+<!--        <lightning-input type="string" required disabled={disabled} label="Title" value={entry.MAJAX__Title__c} onchange={updateTitle}></lightning-input>-->
+<!--        <label for="create_content" class="slds-form-element__label slds-no-flex">-->
+<!--            <abbr title="required" class="slds-required">*</abbr>-->
+<!--            Content-->
+<!--        </label>-->
+
+<!--        <lightning-input-rich-text value={entry.MAJAX__Content__c} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>-->
+
+<!--        <br />-->
+<!--        <h1>Rendered Content</h1>-->
+<!--        <c-rich-text-display-widget enable-debugging={enableDebugging} mode="text" title={title} content={content}></c-rich-text-display-widget>-->
+<!--        <br />-->
+<!--        <div class="button-container slds-text-align_right">-->
+<!--            <div class="actionsContainer">-->
+<!--                <lightning-button variant="destructive" disabled={disabled} label="Hide" title="Hide" onclick={handleHide} class="slds-m-left_x-small"></lightning-button>-->
+<!--                <lightning-button variant="brand" disabled={disabled} label="Update" title="Update" onclick={handleSave} class="slds-m-left_x-small"></lightning-button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </lightning-record-edit-form>-->
 </template>

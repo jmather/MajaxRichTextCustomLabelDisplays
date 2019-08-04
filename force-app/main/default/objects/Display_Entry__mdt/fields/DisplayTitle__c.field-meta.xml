@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>IsDeleted__c</fullName>
-    <defaultValue>false</defaultValue>
+    <fullName>DisplayTitle__c</fullName>
+    <defaultValue>true</defaultValue>
     <externalId>false</externalId>
     <fieldManageability>SubscriberControlled</fieldManageability>
-    <label>Is Deleted</label>
+    <label>Display Title?</label>
     <type>Checkbox</type>
 </CustomField>

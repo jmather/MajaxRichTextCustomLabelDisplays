@@ -1,99 +1,108 @@
 import { LightningElement, track, api } from 'lwc';
-import createEntry from '@salesforce/apex/AdminAPI.createEntry'
-import getTransactionStatus from '@salesforce/apex/AdminAPI.getTransactionStatus'
+import debug from 'c/debug';
+import { RtldDAO } from 'c/rtldDAO';
 
-class JobHelper {
-    static whenComplete(promise, callback, maxCheckCount = 15) {
-        return promise.then(statusJson => {
-            const status = JSON.parse(statusJson);
-            const nextIteration = () => {
-                const check = getTransactionStatus({ txnId: status.txnId, count: status.count, enableDebugging });
-                return JobHelper.whenComplete(check, callback, maxCheckCount);    
-            };
+/**
+ * @typedef {Object} CreateCancelEventDetails
+ * @property {Boolean} enableDebugging
+ * @property {String} action
+ * @property {String} refId
+ */
 
-            RichTextDisplayCreate.log('[richTextDisplayCreate.whenComplete]', { status: JSON.stringify(status) });
-    
-            if (status.isComplete === true) {
-                callback(status);
-                return null;
-            }
+/**
+ * @typedef {CreateCancelEventDetails} CreateEventDetails
+ * @property {MAJAX__Display_Entry__mdt} entry
+ */
 
-            if (status.count > maxCheckCount) {
-                RichTextDisplayCreate.log('[richTextDisplayCreate.whenComplete] bailing out...');
-                return null;
-            }
+/**
+ * @typedef {Object} RichTextDisplayCancelCreateEvent
+ * @property {CreateEventDetails} detail
+ */
 
-            return new Promise((accept) => {
-                setTimeout(accept, 500);
-            }).then(nextIteration);
-        });
-    }
-}
+/**
+ * @typedef {Object} RichTextDisplayCreateEvent
+ * @property {CreateEventDetails} detail
+ */
 
-let enableDebugging = false;
+/**
+ * @event RichTextDisplayCreate#cancel
+ * @type {RichTextDisplayCancelCreateEvent}
+ */
+
+/**
+ * @event RichTextDisplayCreate#precreate
+ * @type {RichTextDisplayCreateEvent}
+ */
+
+/**
+ * @event RichTextDisplayCreate#postcreate
+ * @type {RichTextDisplayCreateEvent}
+ */
 
 export default class RichTextDisplayCreate extends LightningElement {
     @api enableDebugging = false;
-    @track label;
-    @track developerName = '';
-    @track title = '';
-    @track content = '';
+    @api refId = null;
     @track disabled = false;
-
-    static log() {
-        if (enableDebugging) {
-            console.log.apply(console, arguments);
-        }
-    }
+    @track entry = RtldDAO.newEntry();
 
     connectedCallback() {
-        enableDebugging = this.enableDebugging;
+        this.dao = new RtldDAO(this.enableDebugging);
     }
 
-    updateLabel(event) {
-        this.label = event.detail.value;
+    get getTitle() {
+        return this.entry.MAJAX__Title__c;
     }
 
-    updateDeveloperName(event) {
-        this.developerName = event.detail.value;
+    get getContent() {
+        return this.entry.MAJAX__Content__c;
     }
 
-    updateTitle(event) {
-        this.title = event.detail.value;
+    /**
+     *
+     * @param {EntryEditorUpdateEvent} event
+     * @listens EntryEditor#handleUpdate
+     */
+    handleEditorUpdate(event) {
+        debug.event(this.enableDebugging, 'RichTextDisplayCreate.handleEditorUpdate', event);
+        this.entry = event.detail;
     }
 
-    updateContent(event) {
-        this.content = event.detail.value;
-    }
-
-    handleCreate() {
+    /**
+     * @fires RichTextDisplayCreate#cancel
+     */
+    handleCancelClick(event) {
+        debug.event(this.enableDebugging, 'RichTextDisplayCreate.handleCancel', event);
         const obj = {
-            enableDebugging,
-            label: this.label,
-            developerName: this.developerName,
-            title: this.title,
-            content: this.content,
+            enableDebugging: this.enableDebugging,
             action: 'create',
+            refId: this.refId,
+        };
+        this.dispatchEvent(new CustomEvent('cancel', { detail: obj }));
+    }
+
+    /**
+     * @fires RichTextDisplayCreateEvent#precreate
+     * @fires RichTextDisplayCreateEvent#postcreate
+     */
+    handleCreateClick() {
+        const obj = {
+            enableDebugging: this.enableDebugging,
+            entry: this.entry,
+            action: 'create',
+            refId: this.refId,
         };
 
         const controller = this;
 
-        controller.disabled = true;
+        this.disabled = true;
+        this.dispatchEvent(new CustomEvent('precreate', { detail: obj }));
 
-        controller.dispatchEvent(new CustomEvent('precreate', { detail: obj }));
-        
-        JobHelper.whenComplete(
-            createEntry(obj), 
-            (status) => {
-                RichTextDisplayCreate.log('[richTextDisplayCreate.handleCreate]', { status });
-                controller.dispatchEvent(new CustomEvent('postcreate', { detail: obj }));
+        this.dao.create(this.entry).then(status => {
+            obj.entry.DeveloperName = status.txnId;
+            controller.dispatchEvent(new CustomEvent('postcreate', { detail: obj }));
 
-                controller.label = '';
-                controller.developerName = '';
-                controller.title = '';
-                controller.content = ''; 
-                controller.disabled = false;   
-            }
-        );
+            controller.entry = RtldDAO.newEntry();
+            controller.disabled = false;
+        });
     }
 }

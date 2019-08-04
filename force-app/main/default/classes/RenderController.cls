@@ -15,7 +15,7 @@ public without sharing class RenderController {
 
         if (developerName != null && String.isBlank(developerName) == false) {
             setFromEntry(developerName);
-        } else if (content != null && String.isBlank(content) == false) {
+        } else if (content != null && String.isBlank(content) == false || title != null && String.isBlank(title) == false) {
             this.title = title;
             this.content = content;
         } else {
@@ -63,14 +63,14 @@ public without sharing class RenderController {
     }
 
     private void setFromEntry(String developerName) {
-        MAJAX__Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
+        Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
         
         if (entry == null) {
             title = 'Error';
-            content = 'A MAJAX__Display_Entry__mdt record with the DeveloperName "' + developerName + '" was not found.';
+            content = 'A Display_Entry__mdt record with the DeveloperName "' + developerName + '" was not found.';
         }
         
-        title = entry.MAJAX__Title__c;
-        content = entry.MAJAX__Content__c;
+        title = entry.Title__c;
+        content = entry.Content__c;
     }
 }

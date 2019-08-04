@@ -1,109 +1,91 @@
 import { LightningElement, api, track } from 'lwc';
-import updateEntry from '@salesforce/apex/AdminAPI.updateEntry'
-import hideEntry from '@salesforce/apex/AdminAPI.hideEntry'
-import getTransactionStatus from '@salesforce/apex/AdminAPI.getTransactionStatus'
-
-class JobHelper {
-    static whenComplete(promise, callback, maxCheckCount = 15) {
-        return promise.then(statusJson => {
-            var status = JSON.parse(statusJson);
-            var nextIteration = () => {
-                var check = getTransactionStatus({ txnId: status.txnId, count: status.count, enableDebugging });
-                return JobHelper.whenComplete(check, callback, maxCheckCount);
-            };
-
-            RichTextDisplayEdit.log('[richTextDisplayCreate.whenComplete]', { status });
-
-            if (status.isComplete === true) {
-                callback(status);
-                return null;
-            }
-
-            if (status.count > maxCheckCount) {
-                RichTextDisplayEdit.log('[richTextDisplayCreate.whenComplete] bailing out...');
-                return null;
-            }
-
-            return new Promise((accept) => {
-                setTimeout(accept, 500);
-            }).then(nextIteration);
-        });
-    }
-}
-
-let enableDebugging = false;
+import debug from 'c/debug';
+import { RtldDAO } from 'c/rtldDAO';
 
 export default class RichTextDisplayEdit extends LightningElement {
+    /**
+     *
+     * @type {MAJAX__Display_Entry__mdt}
+     */
     @api entry;
     @api enableDebugging = false;
+    @api refId = null;
     @track disabled = false;
-    @track disabledAction = null;
 
-    @track label;
-    @track title;
-    @track content;
-
-    static log() {
-        if (enableDebugging) {
-            console.log.apply(console, arguments);
-        }
-    }
+    /**
+     *
+     * @type {MAJAX__Display_Entry__mdt}
+     */
+    @track updatedEntry = RtldDAO.newEntry();
 
     connectedCallback() {
-        enableDebugging = this.enableDebugging;
-        this.label = this.entry.MasterLabel || '';
-        this.title = this.entry.MAJAX__Title__c || '';
-        this.content = this.entry.MAJAX__Content__c || '';
+        this.dao = new RtldDAO(this.enableDebugging);
+        debug(this.enableDebugging, 'RichTextDisplayEdit.connectedCallback', this.entry);
+        this.updatedEntry = this.entry;
     }
 
-    handleUpdate() {
+    /**
+     *
+     * @param {EntryEditorUpdateEvent} event
+     * @listens EntryEditor#handleUpdate
+     */
+    handleEditorUpdate(event) {
+        debug.event(this.enableDebugging, 'RichTextDisplayEdit.handleEditorUpdate', event);
+        this.updatedEntry = event.detail;
+    }
+
+    handleCancelClick() {
         const obj = {
-            enableDebugging,
-            developerName: this.entry.DeveloperName,
-            label: this.label,
-            title: this.title,
-            content: this.content,
+            enableDebugging: this.enableDebugging,
+            action: 'edit',
+            refId: this.refId,
         };
 
-        this.handleAction('update', obj, updateEntry);
+        this.dispatchEvent(new CustomEvent('cancel', { detail: obj }));
     }
 
-    handleHide() {
+    handleUpdateClick() {
         const obj = {
-            developerName: this.entry.DeveloperName,
+            enableDebugging: this.enableDebugging,
+            action: 'update',
+            last: this.entry,
+            entry: this.updatedEntry,
+            refId: this.refId,
         };
 
-        this.handleAction('hide', obj, hideEntry);
-    }
+        debug(this.enableDebugging, '[RichTextDisplayEdit.handleUpdateClick]', obj);
 
-    handleAction(actionName, obj, action) {
+        this.disabled = true;
+        this.dispatchEvent(new CustomEvent('preupdate', { detail: obj }));
+
         const controller = this;
-        obj.action = actionName;
-        
-        console.log('[RichTextDisplayEdit.handleAction]', { actionName });
-        controller.disabled = true;
-        controller.disabledAction = actionName;
-        controller.dispatchEvent(new CustomEvent('pre' + actionName, { detail: obj }));
 
-        JobHelper.whenComplete(
-            action(obj), 
-            (status) => {
-                console.log('[RichTextDisplayEdit.handleAction]', { status });
-                controller.dispatchEvent(new CustomEvent('post' + actionName, { detail: obj }));
-                controller.disabled = false;
-            }
-        );
+        this.dao.update(this.updatedEntry).then(status => {
+            controller.dispatchEvent(new CustomEvent('postupdate', { detail: obj }));
+
+            controller.disabled = false;
+        });
     }
 
-    updateName(event) {
-        this.label = event.detail.value;
-    }
+    handleHideClick() {
+        const obj = {
+            enableDebugging: this.enableDebugging,
+            action: 'hide',
+            entry: this.updatedEntry,
+            refId: this.refId,
+        };
 
-    updateTitle(event) {
-        this.title = event.detail.value;
-    }
+        debug(this.enableDebugging, '[RichTextDisplayEdit.handleHide]', obj);
 
-    updateContent(event) {
-        this.content = event.detail.value;
+        this.disabled = true;
+        this.dispatchEvent(new CustomEvent('prehide', { detail: obj }));
+
+        const controller = this;
+
+        this.dao.hide(this.updatedEntry.DeveloperName).then(status => {
+            controller.dispatchEvent(new CustomEvent('posthide', { detail: obj }));
+
+            controller.disabled = false;
+        });
     }
 }

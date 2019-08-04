@@ -16,6 +16,25 @@ public without sharing class WidgetAPI {
     }
 
     @AuraEnabled(Cacheable=true)
+    public static String renderEntry(Display_Entry__mdt entry, Boolean enableDebug) {
+        Debug.enabled = (enableDebug != null) ? enableDebug : false;
+
+        Map<String, Object> properties = entry.getPopulatedFieldsAsMap();
+        for (String propName : properties.keySet()) {
+            Debug.log('[WidgetAPI.renderText] ' + propName + ': ' + properties.get(propName));
+        }
+
+        String safeTitle = EncodingUtil.urlEncode(entry.Title__c, 'UTF-8');
+        String safeContent = EncodingUtil.urlEncode(entry.Content__c, 'UTF-8');
+        PageReference render = Page.Render;
+        String url = render.getUrl() + '?title=' + safeTitle + '&content=' + safeContent + '&debug=' + enableDebug;
+
+        String result = getRenderedTextFromUrl(url);
+        Debug.log('[WidgetAPI.renderText] result: ' + result);
+        return result;
+    }
+
+    @AuraEnabled(Cacheable=true)
     public static String renderDeveloperName(String developerName, Boolean enableDebug) {
         Debug.enabled = (enableDebug != null) ? enableDebug : false;
 

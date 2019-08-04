@@ -1,19 +1,26 @@
-public without sharing class AdminAPI {
-    @AuraEnabled(Cacheable=true)
-    public static List<Display_Entry__mdt> getEntries() {
-        return EntryDAO.getEntries();
+/**
+ * Created by jmather on 2019-08-03.
+ */
+
+public with sharing class AdminAPIv2 {
+    @AuraEnabled
+    public static String getEntries(Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
+        return JSON.serialize(EntryDAO.getEntries());
     }
 
     @AuraEnabled
-    public static String createEntry(String label, String title, String content, Boolean enableDebugging) {
+    public static String getEntry(String developerName, Boolean enableDebugging) {
+        Debug.enabled = enableDebugging;
+        return JSON.serialize(EntryDAO.getEntry(developerName));
+    }
+
+    @AuraEnabled
+    public static String createEntry(String entryJson, Boolean enableDebugging) {
         Debug.enabled = enableDebugging;
         String developerName = EntryDAO.generateId();
-        Display_Entry__mdt entry = new Display_Entry__mdt(
-            MasterLabel = label,
-            DeveloperName = developerName,
-            Title__c = title,
-            Content__c = content
-        );
+        Display_Entry__mdt entry = (Display_Entry__mdt) JSON.deserialize(entryJson, Display_Entry__mdt.class);
+        entry.DeveloperName = developerName;
 
         AsyncTransactionStatus status = EntryDAO.upsertEntry(entry);
 
@@ -23,21 +30,10 @@ public without sharing class AdminAPI {
     }
 
     @AuraEnabled
-    public static String updateEntry(String developerName, String label, String title, String content, Boolean enableDebugging) {
+    public static String updateEntry(String entryJson, Boolean enableDebugging) {
         Debug.enabled = enableDebugging;
-        Display_Entry__mdt entry = EntryDAO.getEntry(developerName);
 
-        if (label != null) {
-            entry.MasterLabel = label;
-        }
-
-        if (title != null) {
-            entry.Title__c = title;
-        }
-
-        if (content != null) {
-            entry.Content__c = content;
-        }
+        Display_Entry__mdt entry = (Display_Entry__mdt) JSON.deserialize(entryJson, Display_Entry__mdt.class);
 
         AsyncTransactionStatus status = EntryDAO.upsertEntry(entry);
 

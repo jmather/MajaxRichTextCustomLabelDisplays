@@ -6,12 +6,12 @@
                 <name>enableDebugging</name>
                 <value>true</value>
             </componentInstanceProperties>
-            <componentName>richTextDisplayList</componentName>
+            <componentName>richTextDisplayCreate</componentName>
         </componentInstances>
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Manage Entries</masterLabel>
+    <masterLabel>Create New Entry</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>

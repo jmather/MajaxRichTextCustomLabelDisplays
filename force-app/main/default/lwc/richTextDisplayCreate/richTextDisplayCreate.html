@@ -1,32 +1,27 @@
 <template>
     <div class="slds-grid slds-gutters">
         <div class="slds-col slds-size_7-of-12">
-            <lightning-card title="Create New Entry">
+            <lightning-card title="Edit Properties">
+                <lightning-button disabled={disabled} label="Close" title="Close" onclick={handleCancelClick} slot="actions"></lightning-button>
                 <div class="slds-p-around_medium">
-                    <div class="slds-grid slds-gutters">
-                        <div class="slds-col slds-size_6-of-12">
-                            <lightning-input type="string" required disabled={disabled} label="Name" value={label} onchange={updateLabel}></lightning-input>
-                        </div>
-                        <div class="slds-col slds-size_6-of-12">
-                            <lightning-input type="string" disabled={disabled} label="Title" value={title} onchange={updateTitle}></lightning-input>
-                        </div>
-                    </div>
-                    <label for="create_content" class="slds-form-element__label slds-no-flex">
-                        <abbr title="required" class="slds-required">*</abbr>
-                        Content
-                    </label>
-                    <lightning-input-rich-text value={content} disabled={disabled} onchange={updateContent}></lightning-input-rich-text>
-
-                    <br />
-
+                    <c-entry-editor enable-debugging={enableDebugging} disabled={disabled} onupdate={handleEditorUpdate}></c-entry-editor>
                 </div>
                 <div slot="footer" class="slds-text-align_right">
-                    <lightning-button variant="brand" disabled={disabled} label="Create" title="Create" onclick={handleCreate} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" disabled={disabled} label="Create" title="Create" onclick={handleCreateClick}></lightning-button>
                 </div>
             </lightning-card>
         </div>
         <div class="slds-col slds-size_5-of-12 slds-p-left_large">
-            <c-rich-text-display-widget enable-debugging={enableDebugging} mode="text" note="Example Display" title={title} content={content}></c-rich-text-display-widget>
+            <c-rich-text-display-widget
+                    enable-debugging={enableDebugging}
+                    mode="text"
+                    title={entry.MAJAX__Title__c}
+                    content={entry.MAJAX__Content__c}
+                    display-style={entry.MAJAX__DisplayStyle__c}
+                    display-title={entry.MAJAX__DisplayTitle__c}
+                    url={entry.MAJAX__URL__c}
+                    icon={entry.MAJAX__Icon__c}>
+            </c-rich-text-display-widget>
         </div>
     </div>
 </template>

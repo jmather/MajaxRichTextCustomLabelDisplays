@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="RichTextDisplayCreate">
     <apiVersion>46.0</apiVersion>
-    <isExposed>false</isExposed>
+    <isExposed>true</isExposed>
+    <masterLabel>Create New Rich Text Display</masterLabel>
+    <targets>
+        <target>lightning__AppPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage">
+            <property name="enableDebugging" label="Enable Debugging" default="false" type="Boolean" />
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

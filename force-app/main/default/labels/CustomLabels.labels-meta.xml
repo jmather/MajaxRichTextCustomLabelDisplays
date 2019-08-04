@@ -16,4 +16,20 @@
         <shortDescription>Test_2</shortDescription>
         <value>Test 2</value>
     </labels>
+    <labels>
+        <fullName>Test_Important_Announcement</fullName>
+        <categories>MAJAX</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Test_Important_Announcement</shortDescription>
+        <value>Important Announcement!</value>
+    </labels>
+    <labels>
+        <fullName>Test_Important_Announcement_Content</fullName>
+        <categories>MAJAX</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Test_Important_Announcement_Content</shortDescription>
+        <value>Important announcement content. This is really important.</value>
+    </labels>
 </CustomLabels>

@@ -1,27 +1,49 @@
 public without sharing class EntryDAO {
-    public static List<MAJAX__Display_Entry__mdt> getEntries() {
-        List<MAJAX__Display_Entry__mdt> entries = [
+    public static List<Display_Entry__mdt> getEntries() {
+        return getEntries(false);
+    }
+
+    public static List<Display_Entry__mdt> getEntries(Boolean hiddenEntries) {
+        List<Display_Entry__mdt> entries = [
             SELECT
                 Id,
                 MasterLabel,
                 DeveloperName,
-                MAJAX__Title__c,
-                MAJAX__Content__c,
-                MAJAX__IsHidden__c
-            FROM MAJAX__Display_Entry__mdt
-            WHERE MAJAX__IsHidden__c = FALSE
+                Title__c,
+                Content__c,
+                DisplayTitle__c,
+                DisplayStyle__c,
+                URL__c,
+                Icon__c,
+                IsHidden__c
+            FROM Display_Entry__mdt
+            WHERE IsHidden__c = :hiddenEntries
             ORDER BY MasterLabel
         ];
 
-        for (MAJAX__Display_Entry__mdt entry : entries) {
+        for (Display_Entry__mdt entry : entries) {
             Debug.log('[DAO.getEntries] entry: ' + entry);
         }
 
         return entries;
     }
 
-    public static MAJAX__Display_Entry__mdt getEntry(String developerName) {
-        List<MAJAX__Display_Entry__mdt> entries = [SELECT Id, MasterLabel, DeveloperName, MAJAX__Title__c, MAJAX__Content__c, MAJAX__IsHidden__c FROM MAJAX__Display_Entry__mdt WHERE DeveloperName = :developerName AND MAJAX__IsHidden__c = FALSE];
+    public static Display_Entry__mdt getEntry(String developerName) {
+        List<Display_Entry__mdt> entries = [
+                SELECT
+                        Id,
+                        MasterLabel,
+                        DeveloperName,
+                        Title__c,
+                        Content__c,
+                        DisplayTitle__c,
+                        DisplayStyle__c,
+                        URL__c,
+                        Icon__c,
+                        IsHidden__c
+                FROM Display_Entry__mdt
+                WHERE DeveloperName = :developerName AND IsHidden__c = FALSE
+        ];
         
         if (entries.isEmpty()) {
             return null;
@@ -30,24 +52,29 @@ public without sharing class EntryDAO {
         return entries[0];
     }
 
-    public static AsyncTransactionStatus upsertEntry(MAJAX__Display_Entry__mdt entry) {
+    public static AsyncTransactionStatus upsertEntry(Display_Entry__mdt entry) {
         Callback cb = new Callback(entry.DeveloperName);
 
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
 
-        Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
-        customField.field = 'MAJAX__Content__c';
-        customField.value = entry.MAJAX__Content__c;
+        List<String> fields = new List<String> {
+                'Title__c',
+                'Content__c',
+                'DisplayTitle__c',
+                'DisplayStyle__c',
+                'URL__c',
+                'Icon__c'
+        };
 
-        customMetadata.values.add(customField);
+        for (String field : fields) {
+            Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
+            customField.field = field;
+            customField.value = entry.get(field);
 
-        customField = new Metadata.CustomMetadataValue();
-        customField.field = 'MAJAX__Title__c';
-        customField.value = entry.MAJAX__Title__c;
-
-        customMetadata.values.add(customField);
+            customMetadata.values.add(customField);
+        }
 
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         mdContainer.addMetadata((Metadata.Metadata) customMetadata);
@@ -57,13 +84,13 @@ public without sharing class EntryDAO {
         return TransactionDAO.getStatus(cb.txnId);
     }
 
-    public static AsyncTransactionStatus hideEntry(MAJAX__Display_Entry__mdt entry) {
+    public static AsyncTransactionStatus hideEntry(Display_Entry__mdt entry) {
         Metadata.CustomMetadata customMetadata =  new Metadata.CustomMetadata();
-        customMetadata.fullName = 'MAJAX__Display_Entry__mdt.' + entry.DeveloperName;
+        customMetadata.fullName = 'Display_Entry__mdt.' + entry.DeveloperName;
         customMetadata.label = entry.MasterLabel;
 
         Metadata.CustomMetadataValue customField = new Metadata.CustomMetadataValue();
-        customField.field = 'MAJAX__IsHidden__c';
+        customField.field = 'IsHidden__c';
         customField.value = true;
 
         customMetadata.values.add(customField);
