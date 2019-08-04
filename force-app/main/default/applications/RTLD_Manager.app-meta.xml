@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <description>Manage your organization&#39;s Rich Text Custom Label Displays</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Rich Text Custom Label Manager</label>
+    <navType>Standard</navType>
+    <tabs>RTLD_Manage_Entries</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>RTLD_Manager_UtilityBar</utilityBar>
+</CustomApplication>

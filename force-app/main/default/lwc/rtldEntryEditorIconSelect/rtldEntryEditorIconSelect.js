@@ -1,6 +1,6 @@
 import { LightningElement, api, track } from 'lwc';
 import { icons } from './icons';
-import debug from 'c/debug';
+import debug from 'c/rtldDebug';
 
 export default class RtldEntryEditorIconSelect extends LightningElement {
     @api enableDebugging = false;

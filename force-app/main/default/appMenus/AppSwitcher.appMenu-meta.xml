@@ -61,7 +61,7 @@
         <type>CustomApplication</type>
     </appMenuItems>
     <appMenuItems>
-        <name>MAJAX__Rich_Text_Custom_Label_Displays</name>
+        <name>MAJAX__RTLD_Manager</name>
         <type>CustomApplication</type>
     </appMenuItems>
 </AppMenu>

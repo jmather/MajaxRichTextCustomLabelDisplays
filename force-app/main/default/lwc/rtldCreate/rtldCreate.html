@@ -1,0 +1,27 @@
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_7-of-12">
+            <lightning-card title="Edit Properties">
+                <lightning-button disabled={disabled} label="Close" title="Close" onclick={handleCancelClick} slot="actions"></lightning-button>
+                <div class="slds-p-around_medium">
+                    <c-rtld-entry-editor enable-debugging={enableDebugging} disabled={disabled} onupdate={handleEditorUpdate}></c-rtld-entry-editor>
+                </div>
+                <div slot="footer" class="slds-text-align_right">
+                    <lightning-button variant="brand" disabled={disabled} label="Create" title="Create" onclick={handleCreateClick}></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_5-of-12 slds-p-left_large">
+            <c-rtld-widget
+                    enable-debugging={enableDebugging}
+                    mode="text"
+                    title={entry.MAJAX__Title__c}
+                    content={entry.MAJAX__Content__c}
+                    display-style={entry.MAJAX__DisplayStyle__c}
+                    display-title={entry.MAJAX__DisplayTitle__c}
+                    url={entry.MAJAX__URL__c}
+                    icon={entry.MAJAX__Icon__c}>
+            </c-rtld-widget>
+        </div>
+    </div>
+</template>

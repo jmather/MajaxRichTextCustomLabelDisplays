@@ -1,6 +1,43 @@
 import {api, LightningElement} from 'lwc';
-import debug from 'c/debug';
+import debug from 'c/rtldDebug';
 import { RtldDAO } from 'c/rtldDAO';
+
+/**
+ * @typedef {Object} RtldListEditEventDetails
+ * @property {MAJAX__RTLD_Entry__mdt} entry
+ */
+
+/**
+ * @typedef {RtldListEditEventDetails} RtldListHideEventDetails
+ * @property {Boolean} enableDebugging
+ * @property {String} action
+ * @property {String} refId
+ */
+
+/**
+ * @typedef {Object} RtldListEditEvent
+ * @property {RtldListEditEventDetails} detail
+ */
+
+/**
+ * @typedef {Object} RtldListHideEvent
+ * @property {RtldListHideEventDetails} detail
+ */
+
+/**
+ * @event RtldList#edit
+ * @type {RtldListEditEvent}
+ */
+
+/**
+ * @event RtldList#prehide
+ * @type {RtldListHideEvent}
+ */
+
+/**
+ * @event RtldList#posthide
+ * @type {RtldListHideEvent}
+ */
 
 export default class RtldList extends LightningElement {
     @api enableDebugging = false;
@@ -27,10 +64,14 @@ export default class RtldList extends LightningElement {
         this.dao = new RtldDAO(this.enableDebugging);
     }
 
+    /**
+     * @fires {RtldList#edit}
+     * @param event
+     */
     handleRowAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
-        console.log('row action', { actionName, row: JSON.parse(JSON.stringify(row)) });
+        debug(this.enableDebugging, 'row action', { actionName, row });
         switch (actionName) {
             case 'hide':
                 this._hide(row);
@@ -44,7 +85,9 @@ export default class RtldList extends LightningElement {
 
     /**
      *
-     * @param {MAJAX__Display_Entry__mdt} entry
+     * @param {MAJAX__RTLD_Entry__mdt} entry
+     * @fires {RtldList#prehide}
+     * @fires {RtldList#posthide}
      * @private
      */
     _hide(entry) {

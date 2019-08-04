@@ -1,0 +1,28 @@
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_7-of-12">
+            <lightning-card title="Edit Entry">
+                <lightning-button disabled={disabled} label="Close" title="Close" onclick={handleCancelClick} slot="actions"></lightning-button>
+                <div class="slds-p-around_medium">
+                    <c-rtld-entry-editor entry={entry} enable-debugging={enableDebugging} disabled={disabled} onupdate={handleEditorUpdate}></c-rtld-entry-editor>
+                </div>
+                <div slot="footer" class="slds-text-align_right">
+                    <lightning-button variant="destructive" disabled={disabled} label="Hide" title="Hide" onclick={handleHideClick} class="slds-m-left_x-small"></lightning-button>
+                    <lightning-button variant="brand" disabled={disabled} label="Update" title="Update" onclick={handleUpdateClick} class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+        <div class="slds-col slds-size_5-of-12 slds-p-left_large">
+            <c-rtld-widget
+                    enable-debugging={enableDebugging}
+                    mode="text" note="Example Display"
+                    title={updatedEntry.MAJAX__Title__c}
+                    content={updatedEntry.MAJAX__Content__c}
+                    display-style={updatedEntry.MAJAX__DisplayStyle__c}
+                    display-title={updatedEntry.MAJAX__DisplayTitle__c}
+                    url={updatedEntry.MAJAX__URL__c}
+                    icon={updatedEntry.MAJAX__Icon__c}>
+            </c-rtld-widget>
+        </div>
+    </div>
+</template>

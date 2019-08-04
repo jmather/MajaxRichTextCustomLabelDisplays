@@ -1,9 +1,9 @@
-import debug from 'c/debug';
-import transactionHelper from 'c/transactionHelper';
-import getEntries from '@salesforce/apex/AdminAPIv2.getEntries'
-import createEntry from '@salesforce/apex/AdminAPIv2.createEntry'
-import updateEntry from '@salesforce/apex/AdminAPIv2.updateEntry'
-import hideEntry from '@salesforce/apex/AdminAPIv2.hideEntry'
+import debug from 'c/rtldDebug';
+import transactionHelper from 'c/rtldTransactionHelper';
+import getEntries from '@salesforce/apex/RTLD_AdminApi.getEntries'
+import createEntry from '@salesforce/apex/RTLD_AdminApi.createEntry'
+import updateEntry from '@salesforce/apex/RTLD_AdminApi.updateEntry'
+import hideEntry from '@salesforce/apex/RTLD_AdminApi.hideEntry'
 
 /**
  * @enum { String }
@@ -14,7 +14,7 @@ export const DisplayStyle = {
 };
 
 /**
- * @typedef {Object} MAJAX__Display_Entry__mdt
+ * @typedef {Object} MAJAX__RTLD_Entry__mdt
  * @property {String} Id
  * @property {String} MasterLabel
  * @property {String} DeveloperName
@@ -37,7 +37,7 @@ export class RtldDAO {
 
     /**
      *
-     * @returns {MAJAX__Display_Entry__mdt}
+     * @returns {MAJAX__RTLD_Entry__mdt}
      */
     static newEntry() {
         return {
@@ -54,7 +54,7 @@ export class RtldDAO {
 
     /**
      *
-     * @returns {Promise<MAJAX__Display_Entry__mdt[]>}
+     * @returns {Promise<MAJAX__RTLD_Entry__mdt[]>}
      */
     getAll() {
         return getEntries({ enableDebugging: this.enableDebugging }).then(entriesJson => {
@@ -67,8 +67,8 @@ export class RtldDAO {
 
     /**
      *
-     * @param {MAJAX__Display_Entry__mdt} entry
-     * @returns {Promise<MAJAX__AsyncTransactionStatus>}
+     * @param {MAJAX__RTLD_Entry__mdt} entry
+     * @returns {Promise<MAJAX__RTLD_TransactionStatus>}
      */
     create(entry) {
         const payload = {
@@ -85,8 +85,8 @@ export class RtldDAO {
 
     /**
      *
-     * @param {MAJAX__Display_Entry__mdt} entry
-     * @returns {Promise<MAJAX__AsyncTransactionStatus>}
+     * @param {MAJAX__RTLD_Entry__mdt} entry
+     * @returns {Promise<MAJAX__RTLD_TransactionStatus>}
      */
     update(entry) {
         const payload = {
@@ -103,7 +103,7 @@ export class RtldDAO {
     /**
      *
      * @param {String} developerName
-     * @returns {Promise<MAJAX__AsyncTransactionStatus>}
+     * @returns {Promise<MAJAX__RTLD_TransactionStatus>}
      */
     hide(developerName) {
         const payload = {

@@ -1,0 +1,7 @@
+<apex:page showHeader="false" sidebar="false" controller="RTLD_RenderController">
+    <apex:outputText value="<!-- once for luck: start -->" escape="false" />
+    <apex:outputText value="<!-- twice for consistency: start -->" escape="false" />
+    <apex:outputText value="{!data}" escape="false" />
+    <apex:outputText value="<!-- once for luck: end -->" escape="false" />
+    <apex:outputText value="<!-- twice for consistency: end -->" escape="false" />
+</apex:page>
