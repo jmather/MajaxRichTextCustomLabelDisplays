@@ -11,7 +11,8 @@ package.xml
 # LWC Jest
 **/__tests__/**
 **/profiles/*
-**/settings/Security*
+**/settings/*
 **/translations/*
 **/layouts/Global-*
 **/flexipages/Sales_*
+**/layouts/Display_Entry__mdt*
