@@ -55,9 +55,9 @@ export default class RtldWidget extends LightningElement {
     }
 
     renderedCallback() {
-        this.loading = false;
         const data = {
             values: {
+                loading: this.loading,
                 title: this.renderedTitle,
                 content: this.renderedContent,
                 displayTitle: this.displayTitle,
@@ -117,8 +117,14 @@ export default class RtldWidget extends LightningElement {
             this.displayStyle = entry.MAJAX__DisplayStyle__c;
             this.displayTitle = entry.MAJAX__DisplayTitle__c;
             const controller = this;
-            return callRenderText({ title: this.title, content: this.content, enableDebug: this.enableDebugging })
-                .then((response) => controller.handleResponseData(response));
+            const req = { title: this.title, content: this.content, enableDebug: this.enableDebugging };
+            debug(this.enableDebugging, 'RichTextDisplayWidget.handleGetEntry calling renderText', req);
+            return callRenderText(req)
+                .then((response) => {
+                    debug(controller.enableDebugging, 'RichTextDisplayWidget.handleGetEntry Got response', response);
+
+                    controller.handleResponseData(response)
+                });
         }
     }
 

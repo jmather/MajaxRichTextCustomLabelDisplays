@@ -1,0 +1,24 @@
+{
+  "name": "majax-richtextlabeldisplays",
+  "version": "1.0.0",
+  "description": "Easily publish translatable rich text displays to your users in Salesforce.",
+  "main": "index.js",
+  "scripts": {
+    "test": "lwc-jest",
+    "test:watch": "lwc-jest --watch",
+    "test:debug": "lwc-jest --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmather/MajaxRichTextCustomLabelDisplays.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmather/MajaxRichTextCustomLabelDisplays/issues"
+  },
+  "homepage": "https://github.com/jmather/MajaxRichTextCustomLabelDisplays#readme",
+  "devDependencies": {
+    "@salesforce/lwc-jest": "^0.5.2"
+  }
+}

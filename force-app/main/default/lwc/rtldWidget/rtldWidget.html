@@ -5,13 +5,13 @@
         </div>
     </lightning-card>
     <lightning-card if:true={displayCardWithUrl} title={titleDisplay} icon-name={iconDisplay}>
-        <div class="slds-p-around_medium">
+        <div class="slds-p-around_medium widget_content">
             <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
         </div>
         <a slot="footer" class="slds-button" title="Read more" href={urlDisplay}>Read More</a>
     </lightning-card>
     <lightning-card if:true={displayCardWithoutUrl} title={titleDisplay} icon-name={iconDisplay}>
-        <div class="slds-p-around_medium">
+        <div class="slds-p-around_medium widget_content">
             <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
         </div>
     </lightning-card>

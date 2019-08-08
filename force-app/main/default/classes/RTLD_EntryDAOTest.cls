@@ -24,6 +24,8 @@ public with sharing class RTLD_EntryDAOTest {
         Test.stopTest();
 
         System.assertNotEquals(null, entry);
+
+        System.debug('[RTLD_EntryDAOTest.GetEntry] entry: ' + JSON.serializePretty(entry));
     }
 
     @IsTest
