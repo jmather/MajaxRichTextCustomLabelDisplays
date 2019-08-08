@@ -32,4 +32,20 @@
         <shortDescription>Test_Important_Announcement_Content</shortDescription>
         <value>Important announcement content. This is really important.</value>
     </labels>
+    <labels>
+        <fullName>RTLD_Error_Title</fullName>
+        <categories>MAJAX</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error_Title</shortDescription>
+        <value>Error!</value>
+    </labels>
+    <labels>
+        <fullName>RTLD_Error_Description</fullName>
+        <categories>MAJAX</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RTLD_Error_Description</shortDescription>
+        <value>We encountered an error processing the output.</value>
+    </labels>
 </CustomLabels>

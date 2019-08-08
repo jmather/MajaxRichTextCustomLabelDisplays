@@ -5,10 +5,6 @@ public without sharing class RTLD_TransactionStatus {
     public Boolean isSuccessful;
     public Boolean isDebugging = RTLD_Debug.enabled;
 
-    public RTLD_TransactionStatus() {
-        this(RTLD_Guid.generate(), 0);
-    }
-
     public RTLD_TransactionStatus(String txnId, Integer count) {
         this(txnId, count, false, null);
     }

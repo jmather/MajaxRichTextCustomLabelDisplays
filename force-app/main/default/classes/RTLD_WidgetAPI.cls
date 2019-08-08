@@ -22,46 +22,13 @@ public without sharing class RTLD_WidgetAPI {
         return result;
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static String renderEntry(RTLD_Entry__mdt entry, Boolean enableDebug) {
-        RTLD_Debug.enabled = (enableDebug != null) ? enableDebug : false;
-
-        Map<String, Object> properties = entry.getPopulatedFieldsAsMap();
-        for (String propName : properties.keySet()) {
-            RTLD_Debug.log('[WidgetAPI.renderText] ' + propName + ': ' + properties.get(propName));
-        }
-
-        String safeTitle = EncodingUtil.urlEncode(entry.Title__c, 'UTF-8');
-        String safeContent = EncodingUtil.urlEncode(entry.Content__c, 'UTF-8');
-        PageReference render = Page.RTLD_Render;
-        String url = render.getUrl() + '?title=' + safeTitle + '&content=' + safeContent + '&debug=' + enableDebug;
-
-        String result = getRenderedTextFromUrl(url);
-        RTLD_Debug.log('[WidgetAPI.renderText] result: ' + result);
-        return result;
-    }
-
-    @AuraEnabled(Cacheable=true)
-    public static String renderDeveloperName(String developerName, Boolean enableDebug) {
-        RTLD_Debug.enabled = (enableDebug != null) ? enableDebug : false;
-
-        RTLD_Debug.log('[WidgetAPI.renderDeveloperName] developerName: ' + developerName);
-        PageReference render = Page.RTLD_Render;
-        String url = render.getUrl() + '?developerName=' + developerName + '&debug=' + enableDebug;
-
-        String result = getRenderedTextFromUrl(url);
-        RTLD_Debug.log('[WidgetAPI.renderDeveloperName] result: ' + result);
-
-        return result;
-    }
-
     private static String getRenderedTextFromUrl(String path) {
         String response = getResponseFromUrl(path);
         String content = getContentFromResponse(response);
         RTLD_Debug.log('[WidgetAPI.getRenderedText] content: ' + content);
 
         if (content == null) {
-            return JSON.serialize(new RTLD_RenderedData('Error', 'We encountered an error processing the output.'));
+            return JSON.serialize(new RTLD_RenderedData(Label.RTLD_Error_Title, Label.RTLD_Error_Description));
         }
 
         return content;

@@ -1,4 +1,12 @@
 public without sharing class RTLD_EntryDAO {
+    @TestVisible
+    static IDeploymentHandler deploymentHandler = new DeploymentHandler();
+
+    @TestVisible
+    interface IDeploymentHandler {
+        void deploy(Metadata.DeployContainer container, Metadata.DeployCallback callback);
+    }
+
     public static List<RTLD_Entry__mdt> getEntries() {
         return getEntries(false);
     }
@@ -79,7 +87,7 @@ public without sharing class RTLD_EntryDAO {
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         mdContainer.addMetadata((Metadata.Metadata) customMetadata);
 
-        Metadata.Operations.enqueueDeployment(mdContainer, cb);
+        deploymentHandler.deploy(mdContainer, cb);
 
         return RTLD_TransactionDAO.getStatus(cb.txnId);
     }
@@ -100,7 +108,7 @@ public without sharing class RTLD_EntryDAO {
 
         Callback cb = new Callback(entry.DeveloperName);
 
-        Metadata.Operations.enqueueDeployment(mdContainer, cb);
+        deploymentHandler.deploy(mdContainer, cb);
 
         return RTLD_TransactionDAO.getStatus(cb.txnId);
     }
@@ -109,6 +117,13 @@ public without sharing class RTLD_EntryDAO {
         return 'I' + RTLD_Guid.generateId().replace('-', '_');
     }
 
+    class DeploymentHandler implements IDeploymentHandler {
+        public void deploy(Metadata.DeployContainer container, Metadata.DeployCallback callback) {
+            Metadata.Operations.enqueueDeployment(container, callback);
+        }
+    }
+
+    @TestVisible
     class Callback implements Metadata.DeployCallback {
         public String txnId;
 
