@@ -10,9 +10,12 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
-**/profiles/*
 **/settings/*
 **/translations/*
 **/layouts/Global-*
 **/flexipages/Sales_*
 **/layouts/Display_Entry__mdt*
+**/*SessionSetting*
+**/*PasswordPolicy*
+*SessionSetting*
+*PasswordPolicy*

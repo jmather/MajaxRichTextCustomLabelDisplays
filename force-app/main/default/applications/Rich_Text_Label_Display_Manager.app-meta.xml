@@ -4,13 +4,13 @@
         <headerColor>#0070D2</headerColor>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
     </brand>
-    <description>Manage your organization&#39;s Rich Text Custom Label Displays</description>
+    <description>Manage your Rich Text Custom Label Displays.</description>
     <formFactors>Large</formFactors>
     <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
-    <label>Rich Text Custom Label Manager</label>
+    <label>Rich Text Label Display Manager</label>
     <navType>Standard</navType>
-    <tabs>RTLD_Manage_Entries</tabs>
+    <tabs>Manage_Displays</tabs>
     <uiType>Lightning</uiType>
-    <utilityBar>RTLD_Manager_UtilityBar</utilityBar>
+    <utilityBar>Rich_Text_Label_Display_Manager_UtilityBar</utilityBar>
 </CustomApplication>

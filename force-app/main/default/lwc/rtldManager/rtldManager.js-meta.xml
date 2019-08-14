@@ -5,10 +5,9 @@
     <masterLabel>Rich Text Custom Label Display Manager</masterLabel>
     <targets>
         <target>lightning__AppPage</target>
-        <target>lightning__HomePage</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__HomePage">
+        <targetConfig targets="lightning__AppPage">
             <property name="enableDebugging" label="Enable Debugging" default="false" type="Boolean" />
         </targetConfig>
     </targetConfigs>

@@ -8,7 +8,7 @@
         <name>backgroundComponents</name>
         <type>Background</type>
     </flexiPageRegions>
-    <masterLabel>Rich Text Custom Label Displays UtilityBar</masterLabel>
+    <masterLabel>Rich Text Label Display Manager UtilityBar</masterLabel>
     <template>
         <name>one:utilityBarTemplateDesktop</name>
     </template>
