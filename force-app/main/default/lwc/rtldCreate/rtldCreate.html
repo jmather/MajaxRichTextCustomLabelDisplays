@@ -12,16 +12,10 @@
             </lightning-card>
         </div>
         <div class="slds-col slds-size_5-of-12 slds-p-left_large">
-            <c-rtld-widget
+            <c-rtld-display-widget
                     enable-debugging={enableDebugging}
-                    mode="text"
-                    title={entry.MAJAX__Title__c}
-                    content={entry.MAJAX__Content__c}
-                    display-style={entry.MAJAX__DisplayStyle__c}
-                    display-title={entry.MAJAX__DisplayTitle__c}
-                    url={entry.MAJAX__URL__c}
-                    icon={entry.MAJAX__Icon__c}>
-            </c-rtld-widget>
+                    entry={entry}>
+            </c-rtld-display-widget>
         </div>
     </div>
 </template>

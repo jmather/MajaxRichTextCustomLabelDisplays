@@ -2,7 +2,7 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata" fqn="rtldWidget">
     <apiVersion>46.0</apiVersion>
     <isExposed>true</isExposed>
-    <masterLabel>Rich Text Custom Label</masterLabel>
+    <masterLabel>Rich Text Custom Label Widget</masterLabel>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__HomePage</target>

@@ -1,29 +1,3 @@
 <template>
-    <lightning-card if:true={loading}>
-        <div class="slds-p-around_medium">
-            Loading, please wait...
-        </div>
-    </lightning-card>
-    <lightning-card if:true={displayCardWithUrl} title={titleDisplay} icon-name={iconDisplay}>
-        <div class="slds-p-around_medium widget_content">
-            <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
-        </div>
-        <a slot="footer" class="slds-button" title="Read more" href={urlDisplay}>Read More</a>
-    </lightning-card>
-    <lightning-card if:true={displayCardWithoutUrl} title={titleDisplay} icon-name={iconDisplay}>
-        <div class="slds-p-around_medium widget_content">
-            <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
-        </div>
-    </lightning-card>
-    <ul if:true={displayTile} class="slds-has-dividers_around-space">
-        <li class="slds-item">
-            <lightning-tile if:true={hasIcon} label={titleDisplay} href={urlDisplay} class="slds-tile_board" type="media">
-                <lightning-icon slot="media" icon-name={iconDisplay}></lightning-icon>
-                <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
-            </lightning-tile>
-            <lightning-tile if:false={hasIcon} label={titleDisplay} href={urlDisplay} class="slds-tile_board">
-                <lightning-formatted-rich-text value={contentDisplay}></lightning-formatted-rich-text>
-            </lightning-tile>
-        </li>
-    </ul>
+    <c-rtld-display-widget enable-debugging={enableDebugging} entry={entry}></c-rtld-display-widget>
 </template>
