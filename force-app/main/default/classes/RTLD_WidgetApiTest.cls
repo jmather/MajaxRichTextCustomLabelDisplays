@@ -5,6 +5,12 @@
 public with sharing class RTLD_WidgetApiTest {
     @IsTest
     static void TestRenderText() {
+        String t = Label.Test_1;
+        t = Label.Test_2;
+        t = Label.Test_Important_Announcement;
+        t = Label.Test_Important_Announcement_Content;
+        System.assertNotEquals(null, t);
+
         String title = 'Foo';
         String content = 'Bar';
 
